@@ -1,0 +1,34 @@
+package com.example.DCP.Inventory.System.Entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "package")
+@Data
+public class PackageEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "package_id")
+    private Long packageId;
+
+    @Column(name = "item", nullable = false)
+    private String item;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "serial_number")
+    private String serialNumber;
+
+    @Column(name = "assigned")
+    private Boolean assigned;
+
+    @Column(name = "remarks")
+    private String remarks;
+
+    @ManyToOne
+    @JoinColumn(name = "school_batch_list_id", nullable = false)
+    private SchoolBatchListEntity schoolBatchList;
+}
