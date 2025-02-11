@@ -40,7 +40,7 @@ public class DivisionController {
     // Create a new division
     @PostMapping("/create")
     public ResponseEntity<Object> createDivision(@RequestBody DivisionEntity division) {
-        DivisionEntity createdDivision = divisionService.saveDivision(division);
+        DivisionEntity createdDivision = divisionService.createDivision(division);
         return Response.response(HttpStatus.CREATED, "Division created successfully", createdDivision);
     }
 

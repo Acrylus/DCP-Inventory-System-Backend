@@ -66,4 +66,14 @@ public class BatchController {
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Batch not found");
         }
     }
+
+    @PostMapping("/create_all")
+    public ResponseEntity<Object> addBatches(@RequestBody List<BatchEntity> batches) {
+        try {
+            batchService.saveAll(batches);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Batches added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Batches");
+        }
+    }
 }

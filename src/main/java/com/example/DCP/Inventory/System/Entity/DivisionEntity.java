@@ -6,7 +6,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Table(name = "division")
+@Table(name = "divisions", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "officeName") // Ensure uniqueness at the database level
+})
 @Entity
 public class DivisionEntity {
 
@@ -14,6 +16,7 @@ public class DivisionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long divisionId;
 
+    @Column(nullable = false, unique = true) // Unique constraint for officeName
     private String officeName;
     private String headOfOffice;
     private String position;

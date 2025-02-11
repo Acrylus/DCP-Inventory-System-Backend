@@ -5,6 +5,7 @@ import com.example.DCP.Inventory.System.Repository.DistrictRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DistrictService {
@@ -25,6 +26,19 @@ public class DistrictService {
 
     public DistrictEntity saveDistrict(DistrictEntity district) {
         return districtRepository.save(district);
+    }
+
+    public DistrictEntity updateDistrict(Long id, DistrictEntity districtDetails) {
+        Optional<DistrictEntity> existingDistrict = districtRepository.findById(id);
+        if (existingDistrict.isPresent()) {
+            DistrictEntity districtEntity = existingDistrict.get();
+            districtEntity.setName(districtDetails.getName());
+            districtEntity.setDivision(districtDetails.getDivision());
+            // Set other fields as needed
+            return districtRepository.save(districtEntity);
+        } else {
+            throw new RuntimeException("District not found");
+        }
     }
 
     public void deleteDistrict(Long id) {

@@ -45,6 +45,18 @@ public class DistrictController {
         return Response.response(HttpStatus.CREATED, "District created successfully", createdDistrict);
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateDistrict(
+            @PathVariable Long id,
+            @RequestBody DistrictEntity districtDetails) {
+        try {
+            DistrictEntity updatedDistrict = districtService.updateDistrict(id, districtDetails);
+            return Response.response(HttpStatus.OK, "District updated successfully", updatedDistrict);
+        } catch (RuntimeException e) {
+            return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "District not found");
+        }
+    }
+
     // Delete district by ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteDistrict(@PathVariable Long id) {

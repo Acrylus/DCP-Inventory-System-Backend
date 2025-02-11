@@ -5,6 +5,7 @@ import com.example.DCP.Inventory.System.Repository.MunicipalityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MunicipalityService {
@@ -25,6 +26,19 @@ public class MunicipalityService {
 
     public MunicipalityEntity saveMunicipality(MunicipalityEntity municipality) {
         return municipalityRepository.save(municipality);
+    }
+
+    public MunicipalityEntity updateMunicipality(Long id, MunicipalityEntity municipalityDetails) {
+        Optional<MunicipalityEntity> existingMunicipality = municipalityRepository.findById(id);
+        if (existingMunicipality.isPresent()) {
+            MunicipalityEntity municipalityEntity = existingMunicipality.get();
+            municipalityEntity.setName(municipalityDetails.getName());
+            municipalityEntity.setDivision(municipalityDetails.getDivision());
+            // Set other fields as needed
+            return municipalityRepository.save(municipalityEntity);
+        } else {
+            throw new RuntimeException("Municipality not found");
+        }
     }
 
     public void deleteMunicipality(Long id) {

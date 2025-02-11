@@ -39,6 +39,18 @@ public class MunicipalityController {
         return Response.response(HttpStatus.CREATED, "Municipality created successfully", createdMunicipality);
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> updateMunicipality(
+            @PathVariable Long id,
+            @RequestBody MunicipalityEntity municipalityDetails) {
+        try {
+            MunicipalityEntity updatedMunicipality = municipalityService.updateMunicipality(id, municipalityDetails);
+            return Response.response(HttpStatus.OK, "Municipality updated successfully", updatedMunicipality);
+        } catch (RuntimeException e) {
+            return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Municipality not found");
+        }
+    }
+
     // Delete municipality by ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteMunicipality(@PathVariable Long id) {

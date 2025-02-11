@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -111,9 +112,13 @@ public class UserController {
     }
 
     @PatchMapping("/change_password")
-    public ResponseEntity<Object> changePassword(@RequestParam Long userID, @RequestParam String oldPassword, @RequestParam String newPassword) {
+    public ResponseEntity<Object> changePassword(@RequestBody Map<String, Object> payload) {
         try {
-            boolean passwordChanged = userService.changePassword(userID, oldPassword, newPassword);
+            Long userId = Long.valueOf(payload.get("userId").toString());
+            String oldPassword = payload.get("oldPassword").toString();
+            String newPassword = payload.get("newPassword").toString();
+
+            boolean passwordChanged = userService.changePassword(userId, oldPassword, newPassword);
             return passwordChanged
                     ? NoDataResponse.noDataResponse(HttpStatus.OK, "Password changed successfully")
                     : NoDataResponse.noDataResponse(HttpStatus.BAD_REQUEST, "Old password is incorrect");
@@ -125,4 +130,5 @@ public class UserController {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to change password");
         }
     }
+
 }

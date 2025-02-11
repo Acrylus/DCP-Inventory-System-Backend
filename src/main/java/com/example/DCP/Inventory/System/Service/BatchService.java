@@ -49,4 +49,8 @@ public class BatchService {
     public void deleteBatch(Long id) {
         batchRepository.deleteById(id);
     }
+
+    public void saveAll(List<BatchEntity> batches) {
+        batchRepository.saveAll(batches);
+    }
 }
