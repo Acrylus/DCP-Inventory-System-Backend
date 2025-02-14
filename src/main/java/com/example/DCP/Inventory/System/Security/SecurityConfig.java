@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/district/**").permitAll()
                         .requestMatchers("/municipality/**").permitAll()
                         .requestMatchers("/batch/**").permitAll()
+                        .requestMatchers("/school/**").permitAll()
                         .anyRequest().authenticated() // Secure other endpoints
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No session, use JWT

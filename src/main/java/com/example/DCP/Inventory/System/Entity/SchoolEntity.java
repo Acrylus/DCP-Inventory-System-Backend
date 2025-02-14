@@ -11,6 +11,7 @@ import java.util.Set;
 public class SchoolEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "school_record_id")
     private Long schoolRecordId;
 
@@ -54,7 +55,7 @@ public class SchoolEntity {
     private String schoolHead;
 
     @Column(name = "designation")
-    private Boolean designation;
+    private String designation;
 
     @Column(name = "school_head_email")
     private String schoolHeadEmail;
