@@ -88,38 +88,58 @@ public class SchoolService {
 
     @Transactional
     public List<SchoolEntity> createAllSchools(List<SchoolEntity> schools) {
-        // Check for duplicate school names before saving
+        // Iterate over each school to check for duplicate names and ensure uniqueness
         for (SchoolEntity school : schools) {
-            if (schoolRepository.existsByName(school.getName())) {
-                throw new IllegalArgumentException("School name '" + school.getName() + "' already exists. Please choose a different name.");
+            String originalSchoolName = school.getName();
+            String modifiedSchoolName = originalSchoolName;
+            int suffix = 2;
+
+            // Check and ensure unique school name in the school repository
+            while (schoolRepository.existsByName(modifiedSchoolName)) {
+                modifiedSchoolName = originalSchoolName + " " + suffix;
+                suffix++;  // Increment the suffix for each conflict
+            }
+
+            // Set the modified unique name to the school
+            school.setName(modifiedSchoolName);
+            System.out.println("Unique school name assigned: " + modifiedSchoolName); // Log the unique name
+
+            // Save the school entity first, making it persistent
+            schoolRepository.save(school);
+
+            // Ensure that the username (derived from school name) is unique
+            String username = modifiedSchoolName; // Assuming username is derived from school name
+            while (userRepository.existsByUsername(username)) {
+                username = modifiedSchoolName + " " + suffix; // Update username with suffix if already exists
+                suffix++;
+            }
+
+            // Set the unique username for the user
+            System.out.println("Unique username assigned: " + username); // Log the username
+
+            // Check if the school head's email is provided before creating the user
+            if (school.getSchoolHeadEmail() != null && !school.getSchoolHeadEmail().isEmpty()) {
+                // Now, create the user entity with the saved school
+                UserEntity schoolUser = new UserEntity();
+                schoolUser.setUsername(username);
+                schoolUser.setEmail(school.getSchoolHeadEmail()); // Use school head's email
+                schoolUser.setPassword(passwordEncoder.encode("@Password123")); // Default password
+                schoolUser.setUserType("user"); // Set user type as "user"
+                schoolUser.setSchool(school); // Link the already saved school to the user
+                schoolUser.setDivision(school.getDivision());
+
+                // Save the user after associating the school
+                userRepository.save(schoolUser);
+            } else {
+                System.out.println("No email provided for school: " + modifiedSchoolName + ". Skipping user creation.");
             }
         }
 
-        // Save all school entities
-        List<SchoolEntity> savedSchools = schoolRepository.saveAll(schools);
-
-        // Create a user for each saved school
-        List<UserEntity> schoolUsers = savedSchools.stream().map(savedSchool -> {
-            String username = savedSchool.getName(); // Use school name as username
-
-            // Ensure username is unique
-            if (userRepository.existsByUsername(username)) {
-                throw new IllegalArgumentException("Username '" + username + "' already exists. Please choose a different school name.");
-            }
-
-            UserEntity schoolUser = new UserEntity();
-            schoolUser.setUsername(username);
-            schoolUser.setEmail(savedSchool.getSchoolHeadEmail()); // Use school head's email
-            schoolUser.setPassword(passwordEncoder.encode("@Password123")); // Default password
-            schoolUser.setUserType("user"); // Set user type as "user"
-            schoolUser.setSchool(savedSchool); // Link user to school
-
-            return schoolUser;
-        }).collect(Collectors.toList());
-
-        // Save all users
-        userRepository.saveAll(schoolUsers);
-
-        return savedSchools;
+        // Return the list of saved schools
+        return schools;
     }
+
+
+
+
 }

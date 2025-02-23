@@ -56,6 +56,7 @@ public class SchoolController {
             List<SchoolEntity> createdSchools = schoolService.createAllSchools(schools);
             return Response.response(HttpStatus.CREATED, "Schools created successfully", createdSchools);
         } catch (Exception e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create schools");
         }
     }

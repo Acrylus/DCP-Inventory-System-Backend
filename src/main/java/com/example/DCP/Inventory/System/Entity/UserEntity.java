@@ -33,7 +33,7 @@ public class UserEntity {
     @Convert(converter = FieldConverter.class)
     private String password;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "user_type", nullable = false)
