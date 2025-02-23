@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Table(name = "divisions", uniqueConstraints = {
+@Table(name = "division", uniqueConstraints = {
         @UniqueConstraint(columnNames = "officeName") // Ensure uniqueness at the database level
 })
 @Entity
