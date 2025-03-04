@@ -36,7 +36,7 @@ public class SchoolBatchListService {
         // Updating the fields of the existing entity
         existingBatchList.setBatch(updatedBatchList.getBatch());
         existingBatchList.setSchool(updatedBatchList.getSchool());
-        existingBatchList.setDeliveryYear(updatedBatchList.getDeliveryYear());
+        existingBatchList.setDeliveryDate(updatedBatchList.getDeliveryDate());
         existingBatchList.setNumberOfPackage(updatedBatchList.getNumberOfPackage());
         existingBatchList.setStatus(updatedBatchList.getStatus());
         existingBatchList.setKeyStage(updatedBatchList.getKeyStage());

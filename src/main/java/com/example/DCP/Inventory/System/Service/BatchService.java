@@ -30,13 +30,17 @@ public class BatchService {
                 .orElseThrow(() -> new RuntimeException("Batch not found"));
 
         // Update the batch fields with the details from batchDetails
-        batch.setBatchNumber(batchDetails.getBatchNumber());
+        batch.setBatchName(batchDetails.getBatchName());
         batch.setBudgetYear(batchDetails.getBudgetYear());
         batch.setDeliveryYear(batchDetails.getDeliveryYear());
         batch.setPrice(batchDetails.getPrice());
         batch.setSupplier(batchDetails.getSupplier());
         batch.setNumberOfPackage(batchDetails.getNumberOfPackage());
         batch.setRemarks(batchDetails.getRemarks());
+
+        // Update associated entities
+        batch.setBatchSchoolLists(batchDetails.getBatchSchoolLists());
+        batch.setConfigurations(batchDetails.getConfigurations());
 
         // Save and return the updated batch
         return batchRepository.save(batch);

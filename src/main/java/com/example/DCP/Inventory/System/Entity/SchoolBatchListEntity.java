@@ -22,8 +22,8 @@ public class SchoolBatchListEntity {
     @JoinColumn(name = "school_id", nullable = false)
     private SchoolEntity school;
 
-    @Column(name = "delivery_year")
-    private Integer deliveryYear;
+    @Column(name = "delivery_date")
+    private Integer deliveryDate;
 
     @Column(name = "number_of_package")
     private Integer numberOfPackage;

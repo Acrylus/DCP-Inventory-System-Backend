@@ -10,6 +10,8 @@ import com.example.DCP.Inventory.System.Response.LoginResponse;
 import com.example.DCP.Inventory.System.Response.LoginRequest;
 import com.example.DCP.Inventory.System.Util.JwtUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
@@ -73,7 +78,8 @@ public class UserService {
         UserEntity user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
-        if (!user.getPassword().equals(loginRequest.getPassword())) {
+        // 🔥 FIX: Compare hashed password using passwordEncoder.matches()
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
 

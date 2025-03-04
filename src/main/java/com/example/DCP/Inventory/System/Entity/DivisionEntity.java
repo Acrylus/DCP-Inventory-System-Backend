@@ -16,12 +16,23 @@ public class DivisionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long divisionId;
 
-    @Column(nullable = false, unique = true) // Unique constraint for officeName
-    private String officeName;
-    private String headOfOffice;
-    private String position;
+    @Column(name = "division",nullable = false, unique = true)
+    private String division;
+
+    @Column(name = "title",nullable = false, unique = true)
+    private String title;
+
+    @Column(name = "sds_name")
+    private String sdsName;
+
+    @Column(name = "sds_position")
+    private String sdsPosition;
+
+    @Column(name = "ito_name")
     private String itoName;
-    private String emailAddress;
+
+    @Column(name = "ito_email")
+    private String itoEmail;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

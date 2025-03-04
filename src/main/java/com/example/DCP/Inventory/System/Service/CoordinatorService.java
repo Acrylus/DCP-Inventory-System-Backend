@@ -32,8 +32,11 @@ public class CoordinatorService {
         CoordinatorEntity coordinatorEntity = getCoordinatorById(id);
         coordinatorEntity.setName(coordinatorDetails.getName());
         coordinatorEntity.setEmail(coordinatorDetails.getEmail());
-        coordinatorEntity.setContact(coordinatorDetails.getContact());
+        coordinatorEntity.setNumber(coordinatorDetails.getNumber());
         coordinatorEntity.setSchool(coordinatorDetails.getSchool());
+        coordinatorEntity.setDesignation(coordinatorDetails.getDesignation());
+        coordinatorEntity.setRemarks(coordinatorDetails.getRemarks());
+
         return coordinatorRepository.save(coordinatorEntity);
     }
 
