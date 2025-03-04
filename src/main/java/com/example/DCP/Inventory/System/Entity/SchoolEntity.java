@@ -12,7 +12,7 @@ import java.util.Set;
 public class SchoolEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "school_record_id")
     private Long schoolRecordId;
 

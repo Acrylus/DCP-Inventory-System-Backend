@@ -140,6 +140,7 @@ public class SchoolService {
                 schoolUser.setUserType("user"); // Set user type as "user"
                 schoolUser.setSchool(school); // Link the already saved school to the user
                 schoolUser.setDivision(school.getDivision());
+                schoolUser.setDistrict((school.getDistrict()));
 
                 // Save the user after associating the school
                 userRepository.save(schoolUser);
