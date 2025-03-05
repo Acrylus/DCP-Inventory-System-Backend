@@ -26,17 +26,15 @@ public class ConfigurationService {
     }
 
     public ConfigurationEntity updateConfiguration(Long id, ConfigurationEntity configurationDetails) {
-        Optional<ConfigurationEntity> existingConfiguration = configurationRepository.findById(id);
+        ConfigurationEntity configurationEntity = configurationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Configuration not found for id: " + id));
 
-        if (existingConfiguration.isPresent()) {
-            ConfigurationEntity configurationEntity = existingConfiguration.get();
-            configurationEntity.setItem(configurationDetails.getItem());
-            configurationEntity.setType(configurationDetails.getType());
-            configurationEntity.setQuantity(configurationDetails.getQuantity());
-            return configurationRepository.save(configurationEntity); // Save and return updated entity
-        } else {
-            throw new RuntimeException("Configuration not found for id: " + id);
-        }
+        configurationEntity.setItem(configurationDetails.getItem());
+        configurationEntity.setType(configurationDetails.getType());
+        configurationEntity.setQuantity(configurationDetails.getQuantity());
+        configurationEntity.setBatch(configurationDetails.getBatch());
+
+        return configurationRepository.save(configurationEntity);
     }
 
     public ConfigurationEntity saveConfiguration(ConfigurationEntity configurationEntity) {

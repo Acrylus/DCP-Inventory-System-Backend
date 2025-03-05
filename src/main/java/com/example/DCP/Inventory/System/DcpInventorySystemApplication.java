@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DcpInventorySystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DcpInventorySystemApplication.class, args);
-	}
-
+	 public static void main(String[] args) {
+	 	SpringApplication.run(DcpInventorySystemApplication.class, args);
+	 	System.out.println("Hello!");
+	 }
+	
 }

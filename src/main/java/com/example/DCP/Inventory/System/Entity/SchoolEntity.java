@@ -3,6 +3,7 @@ package com.example.DCP.Inventory.System.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ import java.util.Set;
 public class SchoolEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "school_record_id")
     private Long schoolRecordId;
 
@@ -19,28 +20,15 @@ public class SchoolEntity {
     @JoinColumn(name = "division_id", nullable = false)
     private DivisionEntity division;
 
-    @ManyToMany
-    @JoinTable(
-            name = "district_school_list",
-            joinColumns = @JoinColumn(name = "school_id"),
-            inverseJoinColumns = @JoinColumn(name = "district_id")
-    )
-    private Set<DistrictEntity> districts;
-
-    @Column(name = "school_id")
-    private Long schoolId;
-
-    @Column(name = "batch_id")
-    private Long batchId;
-
-    @Column(name = "ict_coordinator")
-    private String ictCoordinator;
-
-    @Column(name = "record_number")
-    private String recordNumber;
+    @ManyToOne
+    @JoinColumn(name = "district_id", nullable = false)
+    private DistrictEntity district;
 
     @Column(name = "classification")
     private String classification;
+
+    @Column(name = "school_id")
+    private String schoolId;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -48,30 +36,72 @@ public class SchoolEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "number_of_package")
-    private Integer numberOfPackage;
+    @Column(name = "landline")
+    private String landline;
 
     @Column(name = "school_head")
     private String schoolHead;
 
-    @Column(name = "designation")
-    private String designation;
+    @Column(name = "school_head_number")
+    private String schoolHeadNumber;
 
     @Column(name = "school_head_email")
     private String schoolHeadEmail;
 
-    @Column(name = "school_head_contact")
-    private String schoolHeadContact;
+    @Column(name = "property_custodian")
+    private String propertyCustodian;
 
-    @Column(name = "telephone")
-    private String telephone;
+    @Column(name = "property_custodian_number")
+    private String propertyCustodianNumber;
 
-    @Column(name = "previous_station")
-    private String previousStation;
+    @Column(name = "property_custodian_email")
+    private String propertyCustodianEmail;
 
     @Column(name = "energized")
     private Boolean energized;
 
+    @Column(name = "energized_remarks")
+    private Boolean energizedRemarks;
+
+    @Column(name = "local_grid_supply")
+    private Boolean localGridSupply;
+
     @Column(name = "connectivity")
     private Boolean connectivity;
+
+    @Column(name = "smart")
+    private Boolean smart;
+
+    @Column(name = "globe")
+    private Boolean globe;
+
+    @Column(name = "digital_network")
+    private Boolean digitalNetwork;
+
+    @Column(name = "am")
+    private Boolean am;
+
+    @Column(name = "fm")
+    private Boolean fm;
+
+    @Column(name = "tv")
+    private Boolean tv;
+
+    @Column(name = "cable")
+    private Boolean cable;
+
+    @Column(name = "ntc_remark")
+    private String ntcRemark;
+
+    @Column(name = "designation")
+    private String designation;
+
+    @Column(name = "previous_station")
+    private String previousStation;
+
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoordinatorEntity> coordinators;
+
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SchoolBatchListEntity> batchSchoolLists;
 }

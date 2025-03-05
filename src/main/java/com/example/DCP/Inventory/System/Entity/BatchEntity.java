@@ -14,8 +14,8 @@ public class BatchEntity {
     @Column(name = "batch_id")
     private Long batchId;
 
-    @Column(name = "batch_number", nullable = false)
-    private String batchNumber;
+    @Column(name = "batch_name", nullable = false)
+    private String batchName;
 
     @Column(name = "budget_year")
     private Integer budgetYear;

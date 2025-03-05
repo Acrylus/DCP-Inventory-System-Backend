@@ -13,6 +13,10 @@ public class ConfigurationEntity {
     @Column(name = "configuration_id")
     private Long configurationId;
 
+    @ManyToOne
+    @JoinColumn(name = "batch_id", nullable = false)
+    private BatchEntity batch;
+
     @Column(name = "item", nullable = false)
     private String item;
 
@@ -22,7 +26,5 @@ public class ConfigurationEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "batch_id", nullable = false)
-    private BatchEntity batch;
+
 }

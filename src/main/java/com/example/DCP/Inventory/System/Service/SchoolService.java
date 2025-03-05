@@ -64,22 +64,35 @@ public class SchoolService {
     public SchoolEntity updateSchool(Long id, SchoolEntity schoolDetails) {
         SchoolEntity school = getSchoolById(id);
 
-        school.setIctCoordinator(schoolDetails.getIctCoordinator());
-        school.setRecordNumber(schoolDetails.getRecordNumber());
         school.setClassification(schoolDetails.getClassification());
         school.setName(schoolDetails.getName());
         school.setAddress(schoolDetails.getAddress());
-        school.setNumberOfPackage(schoolDetails.getNumberOfPackage());
         school.setSchoolHead(schoolDetails.getSchoolHead());
         school.setDesignation(schoolDetails.getDesignation());
         school.setSchoolHeadEmail(schoolDetails.getSchoolHeadEmail());
-        school.setSchoolHeadContact(schoolDetails.getSchoolHeadContact());
-        school.setTelephone(schoolDetails.getTelephone());
-        school.setPreviousStation(schoolDetails.getPreviousStation());
+        school.setSchoolHeadNumber(schoolDetails.getSchoolHeadNumber());
+        school.setLandline(schoolDetails.getLandline());
+        school.setDivision(schoolDetails.getDivision());
+        school.setDistrict(schoolDetails.getDistrict());
+        school.setPropertyCustodian(schoolDetails.getPropertyCustodian());
+        school.setPropertyCustodianNumber(schoolDetails.getPropertyCustodianNumber());
+        school.setPropertyCustodianEmail(schoolDetails.getPropertyCustodianEmail());
         school.setEnergized(schoolDetails.getEnergized());
+        school.setEnergizedRemarks(schoolDetails.getEnergizedRemarks());
+        school.setLocalGridSupply(schoolDetails.getLocalGridSupply());
         school.setConnectivity(schoolDetails.getConnectivity());
+        school.setSmart(schoolDetails.getSmart());
+        school.setGlobe(schoolDetails.getGlobe());
+        school.setDigitalNetwork(schoolDetails.getDigitalNetwork());
+        school.setAm(schoolDetails.getAm());
+        school.setFm(schoolDetails.getFm());
+        school.setTv(schoolDetails.getTv());
+        school.setCable(schoolDetails.getCable());
+        school.setNtcRemark(schoolDetails.getNtcRemark());
+        school.setCoordinators(schoolDetails.getCoordinators());
+        school.setBatchSchoolLists(schoolDetails.getBatchSchoolLists());
 
-        return saveSchool(school);  // Save updated school
+        return saveSchool(school);
     }
 
     public void deleteSchool(Long id) {
@@ -127,6 +140,7 @@ public class SchoolService {
                 schoolUser.setUserType("user"); // Set user type as "user"
                 schoolUser.setSchool(school); // Link the already saved school to the user
                 schoolUser.setDivision(school.getDivision());
+                schoolUser.setDistrict((school.getDistrict()));
 
                 // Save the user after associating the school
                 userRepository.save(schoolUser);

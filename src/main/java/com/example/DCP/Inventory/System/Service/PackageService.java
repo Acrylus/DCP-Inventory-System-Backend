@@ -37,9 +37,12 @@ public class PackageService {
         // Update the package fields
         existingPackage.setItem(packageDetails.getItem());
         existingPackage.setStatus(packageDetails.getStatus());
+        existingPackage.setComponent(packageDetails.getComponent());
         existingPackage.setSerialNumber(packageDetails.getSerialNumber());
         existingPackage.setAssigned(packageDetails.getAssigned());
         existingPackage.setRemarks(packageDetails.getRemarks());
+        existingPackage.setSchoolBatchList(packageDetails.getSchoolBatchList());
+        existingPackage.setConfiguration(packageDetails.getConfiguration());
 
         // Save the updated package
         return packageRepository.save(existingPackage);

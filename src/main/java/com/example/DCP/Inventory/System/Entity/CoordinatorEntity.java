@@ -20,9 +20,15 @@ public class CoordinatorEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "designation", nullable = false)
+    private String designation;
+
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "contact", nullable = false)
-    private String contact;
+    @Column(name = "number", nullable = false)
+    private String number;
+
+    @Column(name = "remarks", nullable = false)
+    private String remarks;
 }
