@@ -4,6 +4,9 @@ import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
 import com.example.DCP.Inventory.System.Service.ConfigurationService;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +59,16 @@ public class ConfigurationController {
             return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "Configuration deleted successfully");
         } catch (RuntimeException e) {
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Configuration not found");
+        }
+    }
+    
+    @PostMapping("/create_all")
+    public ResponseEntity<Object> addConfigurations(@RequestBody List<ConfigurationEntity> configurations) {
+        try {
+            configurationService.saveAll(configurations);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Configs added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Configs");
         }
     }
 }

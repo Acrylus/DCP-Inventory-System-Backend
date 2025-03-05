@@ -5,7 +5,6 @@ import com.example.DCP.Inventory.System.Repository.ConfigurationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ConfigurationService {
@@ -43,5 +42,9 @@ public class ConfigurationService {
 
     public void deleteConfiguration(Long id) {
         configurationRepository.deleteById(id);
+    }
+    
+    public void saveAll(List<ConfigurationEntity> configurations) {
+        configurationRepository.saveAll(configurations);
     }
 }
