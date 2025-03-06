@@ -11,6 +11,7 @@ import com.example.DCP.Inventory.System.Response.LoginRequest;
 import com.example.DCP.Inventory.System.Util.JwtUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,7 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
@@ -130,26 +130,28 @@ public class UserService {
         return password.length() >= 8 && password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d\\s]).+$");
     }
 
-    public boolean changePassword(Long userId, String oldPassword, String newPassword){
-        UserEntity user = new UserEntity();
+    public boolean changePassword(Long userId, String oldPassword, String newPassword) {
+        UserEntity user;
 
-        try{
-            user = userRepository.findById(userId).get();
+        try {
+            user = userRepository.findById(userId).orElseThrow(NoSuchElementException::new);
 
-            if(user.getPassword().equals(oldPassword)){
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+
                 if (!isValidPassword(newPassword)) {
                     throw new IncorrectPasswordException("Password must be at least 8 characters and have at least one lowercase letter, one uppercase letter, one digit, and one special character");
                 }
 
-                user.setPassword(newPassword);
+                user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return true;
-            }else{
+            } else {
+                System.out.println("Old password does not match.");
                 return false;
             }
 
-        }catch(NoSuchElementException e){
-            throw new NoSuchElementException(e);
+        } catch (NoSuchElementException e) {
+            throw new NoSuchElementException("User not found with ID: " + userId);
         }
     }
 }
