@@ -21,7 +21,7 @@ public class ConfigurationController {
         this.configurationService = configurationService;
     }
 
-    @GetMapping
+    @GetMapping("get_all")
     public ResponseEntity<Object> getAllConfigurations() {
         return Response.response(HttpStatus.OK, "Configurations found", configurationService.getAllConfigurations());
     }
@@ -66,9 +66,9 @@ public class ConfigurationController {
     public ResponseEntity<Object> addConfigurations(@RequestBody List<ConfigurationEntity> configurations) {
         try {
             configurationService.saveAll(configurations);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Configs added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Configurations added successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Configs");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Configurations");
         }
     }
 }

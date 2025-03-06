@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Repository.SchoolBatchListRepository;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,9 @@ public class SchoolBatchListService {
 
     public void deleteSchoolBatchList(Long id) {
         schoolBatchListRepository.deleteById(id);
+    }
+    
+    public void saveAll(List<SchoolBatchListEntity> schoolBatchLists) {
+        schoolBatchListRepository.saveAll(schoolBatchLists);
     }
 }
