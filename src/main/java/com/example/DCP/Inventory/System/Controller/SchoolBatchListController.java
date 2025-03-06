@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -45,6 +46,16 @@ public class SchoolBatchListController {
     @PostMapping("create")
     public SchoolBatchListEntity createSchoolBatchList(@RequestBody SchoolBatchListEntity batchSchoolList) {
         return schoolBatchListService.saveSchoolBatchList(batchSchoolList);
+    }
+    
+    @PostMapping("/create_all")
+    public ResponseEntity<Object> addSchoolBatchLists(@RequestBody List<SchoolBatchListEntity> schoolBatchList) {
+        try {
+        	schoolBatchListService.saveAll(schoolBatchList);
+            return ResponseEntity.status(HttpStatus.CREATED).body("School Batch Lists added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add School Batch Lists");
+        }
     }
 
     @DeleteMapping("/delete/{id}")
