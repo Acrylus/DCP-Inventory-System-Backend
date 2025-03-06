@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolEntity;
 import com.example.DCP.Inventory.System.Entity.UserEntity;
 import com.example.DCP.Inventory.System.Repository.SchoolRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,37 +64,40 @@ public class SchoolService {
     }
 
     public SchoolEntity updateSchool(Long id, SchoolEntity schoolDetails) {
-        SchoolEntity school = getSchoolById(id);
+        Optional<SchoolEntity> existingSchool = schoolRepository.findById(id);
 
-        school.setClassification(schoolDetails.getClassification());
-        school.setName(schoolDetails.getName());
-        school.setAddress(schoolDetails.getAddress());
-        school.setSchoolHead(schoolDetails.getSchoolHead());
-        school.setDesignation(schoolDetails.getDesignation());
-        school.setSchoolHeadEmail(schoolDetails.getSchoolHeadEmail());
-        school.setSchoolHeadNumber(schoolDetails.getSchoolHeadNumber());
-        school.setLandline(schoolDetails.getLandline());
-        school.setDivision(schoolDetails.getDivision());
-        school.setDistrict(schoolDetails.getDistrict());
-        school.setPropertyCustodian(schoolDetails.getPropertyCustodian());
-        school.setPropertyCustodianNumber(schoolDetails.getPropertyCustodianNumber());
-        school.setPropertyCustodianEmail(schoolDetails.getPropertyCustodianEmail());
-        school.setEnergized(schoolDetails.getEnergized());
-        school.setEnergizedRemarks(schoolDetails.getEnergizedRemarks());
-        school.setLocalGridSupply(schoolDetails.getLocalGridSupply());
-        school.setConnectivity(schoolDetails.getConnectivity());
-        school.setSmart(schoolDetails.getSmart());
-        school.setGlobe(schoolDetails.getGlobe());
-        school.setDigitalNetwork(schoolDetails.getDigitalNetwork());
-        school.setAm(schoolDetails.getAm());
-        school.setFm(schoolDetails.getFm());
-        school.setTv(schoolDetails.getTv());
-        school.setCable(schoolDetails.getCable());
-        school.setNtcRemark(schoolDetails.getNtcRemark());
-        school.setCoordinators(schoolDetails.getCoordinators());
-        school.setBatchSchoolLists(schoolDetails.getBatchSchoolLists());
+        if (existingSchool.isPresent()) {
+            SchoolEntity schoolEntity = existingSchool.get();
+            schoolEntity.setClassification(schoolDetails.getClassification());
+            schoolEntity.setName(schoolDetails.getName());
+            schoolEntity.setAddress(schoolDetails.getAddress());
+            schoolEntity.setSchoolHead(schoolDetails.getSchoolHead());
+            schoolEntity.setDesignation(schoolDetails.getDesignation());
+            schoolEntity.setSchoolHeadEmail(schoolDetails.getSchoolHeadEmail());
+            schoolEntity.setSchoolHeadNumber(schoolDetails.getSchoolHeadNumber());
+            schoolEntity.setLandline(schoolDetails.getLandline());
+            schoolEntity.setDivision(schoolDetails.getDivision());
+            schoolEntity.setDistrict(schoolDetails.getDistrict());
+            schoolEntity.setPropertyCustodian(schoolDetails.getPropertyCustodian());
+            schoolEntity.setPropertyCustodianNumber(schoolDetails.getPropertyCustodianNumber());
+            schoolEntity.setPropertyCustodianEmail(schoolDetails.getPropertyCustodianEmail());
+            schoolEntity.setEnergized(schoolDetails.getEnergized());
+            schoolEntity.setEnergizedRemarks(schoolDetails.getEnergizedRemarks());
+            schoolEntity.setLocalGridSupply(schoolDetails.getLocalGridSupply());
+            schoolEntity.setConnectivity(schoolDetails.getConnectivity());
+            schoolEntity.setSmart(schoolDetails.getSmart());
+            schoolEntity.setGlobe(schoolDetails.getGlobe());
+            schoolEntity.setDigitalNetwork(schoolDetails.getDigitalNetwork());
+            schoolEntity.setAm(schoolDetails.getAm());
+            schoolEntity.setFm(schoolDetails.getFm());
+            schoolEntity.setTv(schoolDetails.getTv());
+            schoolEntity.setCable(schoolDetails.getCable());
+            schoolEntity.setNtcRemark(schoolDetails.getNtcRemark());
 
-        return saveSchool(school);
+            return schoolRepository.save(schoolEntity);
+        } else {
+            throw new RuntimeException("School not found with ID: " + id);
+        }
     }
 
     public void deleteSchool(Long id) {
