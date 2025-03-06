@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Response;
 
+import com.example.DCP.Inventory.System.Entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,6 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
 
     private String message;
-    private Long userId;
-    private String username;
-    private String userType;
-    private String token; // Field to hold the JWT
+    private UserEntity user;
+    private String token;
 }

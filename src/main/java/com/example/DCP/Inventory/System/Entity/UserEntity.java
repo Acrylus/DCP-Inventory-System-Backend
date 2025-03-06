@@ -1,6 +1,7 @@
 package com.example.DCP.Inventory.System.Entity;
 
 import com.example.DCP.Inventory.System.FieldConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +30,7 @@ public class UserEntity {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     @Convert(converter = FieldConverter.class)
     private String password;
