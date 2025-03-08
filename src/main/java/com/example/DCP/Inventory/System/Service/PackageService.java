@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Repository.PackageRepository;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,9 @@ public class PackageService {
 
     public void deletePackage(Long id) {
         packageRepository.deleteById(id);
+    }
+    
+    public void saveAll(List<PackageEntity> packages) {
+        packageRepository.saveAll(packages);
     }
 }

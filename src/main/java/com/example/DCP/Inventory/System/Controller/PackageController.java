@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -52,5 +53,15 @@ public class PackageController {
     public ResponseEntity<Object> deletePackage(@PathVariable Long id) {
         packageService.deletePackage(id);
         return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "Package deleted successfully");
+    }
+    
+    @PostMapping("/create_all")
+    public ResponseEntity<Object> addPackages(@RequestBody List<PackageEntity> packages) {
+        try {
+            packageService.saveAll(packages);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Configurations added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Configurations");
+        }
     }
 }
