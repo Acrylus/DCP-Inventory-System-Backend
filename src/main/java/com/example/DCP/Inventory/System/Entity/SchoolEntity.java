@@ -61,7 +61,7 @@ public class SchoolEntity {
     private Boolean energized;
 
     @Column(name = "energized_remarks")
-    private Boolean energizedRemarks;
+    private String energizedRemarks;
 
     @Column(name = "local_grid_supply")
     private Boolean localGridSupply;
@@ -103,5 +103,5 @@ public class SchoolEntity {
     private List<CoordinatorEntity> coordinators;
 
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SchoolBatchListEntity> batchSchoolLists;
+    private List<SchoolBatchListEntity> schoolBatchList;
 }

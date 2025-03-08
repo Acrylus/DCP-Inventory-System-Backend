@@ -36,7 +36,7 @@ public class BatchEntity {
     private String remarks;
 
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SchoolBatchListEntity> batchSchoolLists;
+    private List<SchoolBatchListEntity> schoolBatchList;
 
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConfigurationEntity> configurations;
