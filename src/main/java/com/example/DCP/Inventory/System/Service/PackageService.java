@@ -55,4 +55,8 @@ public class PackageService {
     public void deletePackage(Long id) {
         packageRepository.deleteById(id);
     }
+    
+    public void saveAll(List<PackageEntity> packages) {
+        packageRepository.saveAll(packages);
+    }
 }

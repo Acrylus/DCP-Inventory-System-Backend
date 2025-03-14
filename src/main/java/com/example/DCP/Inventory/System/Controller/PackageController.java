@@ -53,4 +53,14 @@ public class PackageController {
         packageService.deletePackage(id);
         return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "Package deleted successfully");
     }
+
+    @PostMapping("/create_all")
+    public ResponseEntity<Object> addPackages(@RequestBody List<PackageEntity> packages) {
+        try {
+            packageService.saveAll(packages);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Configurations added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Configurations");
+        }
+    }
 }
