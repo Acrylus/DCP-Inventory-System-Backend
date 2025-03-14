@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;

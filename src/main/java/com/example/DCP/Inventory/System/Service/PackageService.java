@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Repository.PackageRepository;
 import org.springframework.stereotype.Service;
