@@ -87,7 +87,7 @@ public class UserService {
         String token = jwtUtil.generateToken(user.getUsername(), user.getUserId(), user.getUserType());
 
         // Return response with JWT
-        return new LoginResponse("Login successful", user, token);
+        return new LoginResponse(user, token);
     }
 
     @Transactional
