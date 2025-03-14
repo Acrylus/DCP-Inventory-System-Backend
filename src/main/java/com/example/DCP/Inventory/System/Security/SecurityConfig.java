@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/municipality/**").permitAll()
                         .requestMatchers("/batch/**").permitAll()
                         .requestMatchers("/school/**").permitAll()
+                        .requestMatchers("/school_batch_list/**").permitAll()
                         .requestMatchers("/configuration/**").permitAll()
                         .anyRequest().authenticated() // Secure other endpoints
                 )
