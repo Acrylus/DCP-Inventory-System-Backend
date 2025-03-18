@@ -71,4 +71,10 @@ public class ConfigurationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Configurations");
         }
     }
+
+    @GetMapping("/batch/{batchId}")
+    public ResponseEntity<List<ConfigurationEntity>> getConfigurationsByBatch(@PathVariable Long batchId) {
+        List<ConfigurationEntity> configurations = configurationService.getConfigurationsByBatchId(batchId);
+        return ResponseEntity.ok(configurations);
+    }
 }

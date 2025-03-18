@@ -29,5 +29,4 @@ public class ConfigurationEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-
 }

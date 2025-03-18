@@ -13,6 +13,14 @@ public class PackageEntity {
     @Column(name = "package_id")
     private Long packageId;
 
+    @ManyToOne
+    @JoinColumn(name = "school_batch_list_id", nullable = false)
+    private SchoolBatchListEntity schoolBatchList;
+
+    @ManyToOne
+    @JoinColumn(name = "configuration_id", nullable = false)
+    private ConfigurationEntity configuration;
+
     @Column(name = "item", nullable = false)
     private String item;
 
@@ -30,12 +38,4 @@ public class PackageEntity {
 
     @Column(name = "remarks")
     private String remarks;
-
-    @ManyToOne
-    @JoinColumn(name = "school_batch_list_id", nullable = false)
-    private SchoolBatchListEntity schoolBatchList;
-
-    @ManyToOne
-    @JoinColumn(name = "configuration_id", nullable = false)
-    private ConfigurationEntity configuration;
 }
