@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/school-contacts")
+@RequestMapping("/school_contact")
 public class SchoolContactController {
 
     private final SchoolContactService schoolContactService;

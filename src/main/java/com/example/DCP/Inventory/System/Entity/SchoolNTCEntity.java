@@ -14,21 +14,18 @@ public class SchoolNTCEntity {
     @Column(name = "school_ntc_id")
     private Long schoolNTCId;
 
-    @OneToOne(mappedBy = "schoolContact")
+    @OneToOne(mappedBy = "schoolNTC")
     @JsonBackReference
     private SchoolEntity school;
 
     @Column(name = "internet")
     private Boolean internet;
 
-    @Column(name = "smart")
-    private Boolean smart;
+    @Column(name = "pldt")
+    private Boolean pldt;
 
     @Column(name = "globe")
     private Boolean globe;
-
-    @Column(name = "digitel_network")
-    private Boolean digitelNetwork;
 
     @Column(name = "am")
     private Boolean am;

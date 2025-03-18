@@ -19,45 +19,42 @@ public class SchoolContactService {
         this.schoolContactRepository = schoolContactRepository;
     }
 
-    // Create a single SchoolContactEntity
     public SchoolContactEntity createSchoolContact(SchoolContactEntity schoolContact) {
         return schoolContactRepository.save(schoolContact);
     }
 
-    // Create multiple SchoolContactEntities
     public List<SchoolContactEntity> createAllSchoolContacts(List<SchoolContactEntity> schoolContacts) {
         return schoolContactRepository.saveAll(schoolContacts);
     }
 
-    // Retrieve all SchoolContactEntities
     public List<SchoolContactEntity> getAllSchoolContacts() {
         return schoolContactRepository.findAll();
     }
 
-    // Retrieve a single SchoolContactEntity by ID
     public Optional<SchoolContactEntity> getSchoolContactById(Long id) {
         return schoolContactRepository.findById(id);
     }
 
-    // Update an existing SchoolContactEntity
     public SchoolContactEntity updateSchoolContact(Long id, SchoolContactEntity updatedContact) {
-        SchoolContactEntity order = new SchoolContactEntity();
-        try {
-            schoolContact.setLandline(updatedContact.getLandline());
-            schoolContact.setSchoolHead(updatedContact.getSchoolHead());
-            schoolContact.setSchoolHeadNumber(updatedContact.getSchoolHeadNumber());
-            schoolContact.setSchoolHeadEmail(updatedContact.getSchoolHeadEmail());
-            schoolContact.setPropertyCustodian(updatedContact.getPropertyCustodian());
-            schoolContact.setPropertyCustodianNumber(updatedContact.getPropertyCustodianNumber());
-            schoolContact.setPropertyCustodianEmail(updatedContact.getPropertyCustodianEmail());
-        } catch (NoSuchElementException ex) {
-            throw new NoSuchElementException("School Contact ID not found: " + id);
-        } finally {
-            return schoolContactRepository.save(schoolContactEntity);
+        Optional<SchoolContactEntity> existingContactOptional = schoolContactRepository.findById(id);
+
+        if (existingContactOptional.isEmpty()) {
+            throw new RuntimeException("School Contact not found with ID: " + id);
         }
+
+        SchoolContactEntity existingContact = existingContactOptional.get();
+
+        existingContact.setLandline(updatedContact.getLandline());
+        existingContact.setSchoolHead(updatedContact.getSchoolHead());
+        existingContact.setSchoolHeadNumber(updatedContact.getSchoolHeadNumber());
+        existingContact.setSchoolHeadEmail(updatedContact.getSchoolHeadEmail());
+        existingContact.setPropertyCustodian(updatedContact.getPropertyCustodian());
+        existingContact.setPropertyCustodianNumber(updatedContact.getPropertyCustodianNumber());
+        existingContact.setPropertyCustodianEmail(updatedContact.getPropertyCustodianEmail());
+
+        return schoolContactRepository.save(existingContact);
     }
 
-    // Delete a SchoolContactEntity by ID
     public void deleteSchoolContact(Long id) {
         if (schoolContactRepository.existsById(id)) {
             schoolContactRepository.deleteById(id);

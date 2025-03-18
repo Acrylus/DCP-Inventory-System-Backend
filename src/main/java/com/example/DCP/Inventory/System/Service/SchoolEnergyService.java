@@ -26,8 +26,7 @@ public class SchoolEnergyService {
     }
 
     public List<SchoolEnergyEntity> getAllSchoolEnergy() {
-        return schoolEnergyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("School Energy not found"));
+        return schoolEnergyRepository.findAll();
     }
 
     public Optional<SchoolEnergyEntity> getSchoolEnergyById(Long id) {
@@ -35,18 +34,21 @@ public class SchoolEnergyService {
     }
 
     public SchoolEnergyEntity updateSchoolEnergy(Long id, SchoolEnergyEntity updatedEnergy) {
-        Optional<SchoolEnergyEntity> existingSchool = schoolEnergyRepository.findById(id);
+        Optional<SchoolEnergyEntity> existingSchoolEnergyOptional = schoolEnergyRepository.findById(id);
 
-        if (existingSchool.isPresent()) {
-            schoolEnergy.setEnergized(updatedEnergy.getEnergized());
-            schoolEnergy.setRemarks(updatedEnergy.getRemarks());
-            schoolEnergy.setLocalGridSupply(updatedEnergy.getLocalGridSupply());
-
-            return schoolEnergyRepository.save(schoolEnergyEntity);
-        } else {
+        if (existingSchoolEnergyOptional.isEmpty()) {
             throw new RuntimeException("School Energy ID not found: " + id);
         }
+
+        SchoolEnergyEntity existingSchoolEnergy = existingSchoolEnergyOptional.get();
+
+        existingSchoolEnergy.setEnergized(updatedEnergy.getEnergized());
+        existingSchoolEnergy.setRemarks(updatedEnergy.getRemarks());
+        existingSchoolEnergy.setLocalGridSupply(updatedEnergy.getLocalGridSupply());
+
+        return schoolEnergyRepository.save(existingSchoolEnergy);
     }
+
 
     public void deleteSchoolEnergy(Long id) {
         if (schoolEnergyRepository.existsById(id)) {
@@ -54,20 +56,5 @@ public class SchoolEnergyService {
         } else {
             throw new RuntimeException("School Energy ID not found: " + id);
         }
-    }
-
-    // Method to count all records
-    public long countSchoolEnergy() {
-        return schoolEnergyRepository.count();
-    }
-
-    // Method to get records by Local Grid Supply
-    public List<SchoolEnergyEntity> findByLocalGridSupply(String localGridSupply) {
-        return schoolEnergyRepository.findByLocalGridSupply(localGridSupply);
-    }
-
-    // Method to check if a record exists by ID
-    public boolean existsById(Long id) {
-        return schoolEnergyRepository.existsById(id);
     }
 }

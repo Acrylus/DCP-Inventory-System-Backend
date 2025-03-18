@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/school-energy")
+@RequestMapping("/school_energy")
 public class SchoolEnergyController {
 
     private final SchoolEnergyService schoolEnergyService;
@@ -78,39 +78,6 @@ public class SchoolEnergyController {
             return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "School energy deleted successfully");
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete school energy");
-        }
-    }
-
-    // New: Get total count of records
-    @GetMapping("/count")
-    public ResponseEntity<Object> countSchoolEnergy() {
-        try {
-            long count = schoolEnergyService.countSchoolEnergy();
-            return Response.response(HttpStatus.OK, "Total school energy records", count);
-        } catch (Exception e) {
-            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch count");
-        }
-    }
-
-    // New: Get records by localGridSupply
-    @GetMapping("/by-grid-supply/{localGridSupply}")
-    public ResponseEntity<Object> getByLocalGridSupply(@PathVariable String localGridSupply) {
-        try {
-            List<SchoolEnergyEntity> schoolEnergies = schoolEnergyService.findByLocalGridSupply(localGridSupply);
-            return Response.response(HttpStatus.OK, "School energies fetched successfully", schoolEnergies);
-        } catch (Exception e) {
-            return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "No records found for the given localGridSupply");
-        }
-    }
-
-    // New: Check if an ID exists
-    @GetMapping("/exists/{id}")
-    public ResponseEntity<Object> existsById(@PathVariable Long id) {
-        try {
-            boolean exists = schoolEnergyService.existsById(id);
-            return Response.response(HttpStatus.OK, "Existence check", exists);
-        } catch (Exception e) {
-            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to check existence");
         }
     }
 }
