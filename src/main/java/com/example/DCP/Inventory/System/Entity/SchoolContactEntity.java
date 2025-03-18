@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,6 +13,10 @@ public class SchoolContactEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "school_contact_id")
     private Long schoolContactId;
+
+    @OneToOne(mappedBy = "schoolContact")
+    @JsonBackReference
+    private SchoolEntity school;
 
     @Column(name = "landline")
     private String landline;
