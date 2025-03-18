@@ -1,8 +1,10 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.DistrictEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolEntity;
 import com.example.DCP.Inventory.System.Entity.UserEntity;
+import com.example.DCP.Inventory.System.Repository.DistrictRepository;
 import com.example.DCP.Inventory.System.Repository.SchoolRepository;
 import com.example.DCP.Inventory.System.Repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,8 @@ public class SchoolService {
 
     @Autowired
     private SchoolRepository schoolRepository;
+    @Autowired
+    private DistrictRepository districtRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -116,9 +120,12 @@ public class SchoolService {
 
             UserEntity schoolUser = new UserEntity();
             schoolUser.setUsername(username);
-            schoolUser.setEmail(school.getSchoolContact().getSchoolHeadEmail());
+            if (school.getSchoolContact() != null && school.getSchoolContact().getSchoolHeadEmail() != null
+                    && !school.getSchoolContact().getSchoolHeadEmail().isEmpty()) {
+                schoolUser.setEmail(school.getSchoolContact().getSchoolHeadEmail());
+            }
             schoolUser.setPassword(passwordEncoder.encode("@Password123"));
-            schoolUser.setUserType("user");
+            schoolUser.setUserType("school");
             schoolUser.setSchool(school);
             schoolUser.setDivision(school.getDivision());
             schoolUser.setDistrict((school.getDistrict()));

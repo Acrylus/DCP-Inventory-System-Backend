@@ -1,4 +1,5 @@
 package com.example.DCP.Inventory.System.Entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -35,10 +36,10 @@ public class DivisionEntity {
     private String itoEmail;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonBackReference("division_municipality")
     private List<MunicipalityEntity> municipalities;
 
     @OneToMany(mappedBy = "division", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonBackReference("division_district")
     private List<DistrictEntity> districts;
 }

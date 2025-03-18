@@ -20,12 +20,10 @@ public class SchoolEntity {
 
     @ManyToOne
     @JoinColumn(name = "division_id", nullable = false)
-    @JsonIgnore
     private DivisionEntity division;
 
     @ManyToOne
     @JoinColumn(name = "district_id", nullable = false)
-    @JsonIgnore
     private DistrictEntity district;
 
     @Column(name = "classification")
@@ -47,25 +45,25 @@ public class SchoolEntity {
     private String previousStation;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "school_contact_id", referencedColumnName = "school_contact_id")
+    @JoinColumn(name = "school_contact_id")
     @JsonManagedReference
     private SchoolContactEntity schoolContact;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "school_energy_id", referencedColumnName = "school_energy_id")
+    @JoinColumn(name = "school_energy_id")
     @JsonManagedReference
     private SchoolEnergyEntity schoolEnergy;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "school_ntc_id", referencedColumnName = "school_ntc_id")
+    @JoinColumn(name = "school_ntc_id")
     @JsonManagedReference
     private SchoolNTCEntity schoolNTC;
 
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonBackReference("school_coordinator")
     private List<CoordinatorEntity> coordinators;
 
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonBackReference("school_batch_list")
     private List<SchoolBatchListEntity> schoolBatchList;
 }

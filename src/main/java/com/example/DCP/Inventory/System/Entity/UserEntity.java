@@ -35,7 +35,7 @@ public class UserEntity {
     @Convert(converter = FieldConverter.class)
     private String password;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = true)
     private String email;
 
     @Column(name = "user_type", nullable = false)

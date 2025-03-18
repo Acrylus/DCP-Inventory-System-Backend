@@ -23,8 +23,13 @@ public class DistrictController {
     // Get all districts
     @GetMapping("/get_all")
     public ResponseEntity<Object> getAllDistricts() {
-        List<DistrictEntity> districts = districtService.getAllDistricts();
-        return Response.response(HttpStatus.OK, "Districts found", districts);
+        try {
+            List<DistrictEntity> districts = districtService.getAllDistricts();
+            return Response.response(HttpStatus.OK, "Districts found", districts);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to get districts");
+        }
     }
 
     // Get district by ID
