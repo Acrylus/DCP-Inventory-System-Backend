@@ -39,7 +39,7 @@ public class BatchService {
         batch.setRemarks(batchDetails.getRemarks());
 
         // Update associated entities
-        batch.setBatchSchoolLists(batchDetails.getBatchSchoolLists());
+        batch.setSchoolBatchList(batchDetails.getSchoolBatchList());
         batch.setConfigurations(batchDetails.getConfigurations());
 
         // Save and return the updated batch

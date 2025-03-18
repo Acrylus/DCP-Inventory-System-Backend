@@ -60,4 +60,8 @@ public class SchoolBatchListService {
     public void saveAll(List<SchoolBatchListEntity> schoolBatchLists) {
         schoolBatchListRepository.saveAll(schoolBatchLists);
     }
+
+    public List<SchoolBatchListEntity> getSchoolBatchListByBatchId(Long batchId) {
+        return schoolBatchListRepository.findByBatch_BatchId(batchId);
+    }
 }
