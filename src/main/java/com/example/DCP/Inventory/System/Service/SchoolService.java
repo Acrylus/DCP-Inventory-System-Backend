@@ -71,28 +71,9 @@ public class SchoolService {
             schoolEntity.setClassification(schoolDetails.getClassification());
             schoolEntity.setName(schoolDetails.getName());
             schoolEntity.setAddress(schoolDetails.getAddress());
-            schoolEntity.setSchoolHead(schoolDetails.getSchoolHead());
             schoolEntity.setDesignation(schoolDetails.getDesignation());
-            schoolEntity.setSchoolHeadEmail(schoolDetails.getSchoolHeadEmail());
-            schoolEntity.setSchoolHeadNumber(schoolDetails.getSchoolHeadNumber());
-            schoolEntity.setLandline(schoolDetails.getLandline());
             schoolEntity.setDivision(schoolDetails.getDivision());
             schoolEntity.setDistrict(schoolDetails.getDistrict());
-            schoolEntity.setPropertyCustodian(schoolDetails.getPropertyCustodian());
-            schoolEntity.setPropertyCustodianNumber(schoolDetails.getPropertyCustodianNumber());
-            schoolEntity.setPropertyCustodianEmail(schoolDetails.getPropertyCustodianEmail());
-            schoolEntity.setEnergized(schoolDetails.getEnergized());
-            schoolEntity.setEnergizedRemarks(schoolDetails.getEnergizedRemarks());
-            schoolEntity.setLocalGridSupply(schoolDetails.getLocalGridSupply());
-            schoolEntity.setConnectivity(schoolDetails.getConnectivity());
-            schoolEntity.setSmart(schoolDetails.getSmart());
-            schoolEntity.setGlobe(schoolDetails.getGlobe());
-            schoolEntity.setDigitalNetwork(schoolDetails.getDigitalNetwork());
-            schoolEntity.setAm(schoolDetails.getAm());
-            schoolEntity.setFm(schoolDetails.getFm());
-            schoolEntity.setTv(schoolDetails.getTv());
-            schoolEntity.setCable(schoolDetails.getCable());
-            schoolEntity.setNtcRemark(schoolDetails.getNtcRemark());
 
             return schoolRepository.save(schoolEntity);
         } else {
