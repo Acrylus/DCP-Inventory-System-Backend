@@ -29,13 +29,12 @@ public class PackageService {
     public PackageEntity updatePackage(Long id, PackageEntity packageDetails) {
         Optional<PackageEntity> existingPackageOptional = packageRepository.findById(id);
 
-        if (!existingPackageOptional.isPresent()) {
+        if (existingPackageOptional.isEmpty()) {
             throw new RuntimeException("Package not found with id: " + id);
         }
 
         PackageEntity existingPackage = existingPackageOptional.get();
 
-        // Update the package fields
         existingPackage.setItem(packageDetails.getItem());
         existingPackage.setStatus(packageDetails.getStatus());
         existingPackage.setComponent(packageDetails.getComponent());
@@ -45,7 +44,6 @@ public class PackageService {
         existingPackage.setSchoolBatchList(packageDetails.getSchoolBatchList());
         existingPackage.setConfiguration(packageDetails.getConfiguration());
 
-        // Save the updated package
         return packageRepository.save(existingPackage);
     }
 

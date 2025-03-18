@@ -1,5 +1,8 @@
 package com.example.DCP.Inventory.System.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,10 +19,12 @@ public class SchoolBatchListEntity {
 
     @ManyToOne
     @JoinColumn(name = "batch_id", nullable = false)
+    @JsonBackReference
     private BatchEntity batch;
 
     @ManyToOne
     @JoinColumn(name = "school_id", nullable = false)
+    @JsonIgnoreProperties("schoolBatchList")
     private SchoolEntity school;
 
     @Column(name = "delivery_date")

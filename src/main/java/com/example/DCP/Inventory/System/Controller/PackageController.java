@@ -54,7 +54,7 @@ public class PackageController {
         packageService.deletePackage(id);
         return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "Package deleted successfully");
     }
-    
+
     @PostMapping("/create_all")
     public ResponseEntity<Object> addPackages(@RequestBody List<PackageEntity> packages) {
         try {

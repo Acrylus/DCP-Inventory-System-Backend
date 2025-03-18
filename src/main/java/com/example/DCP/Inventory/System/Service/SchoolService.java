@@ -39,24 +39,32 @@ public class SchoolService {
 
     @Transactional
     public SchoolEntity saveSchool(SchoolEntity school) {
-        if (schoolRepository.existsByName(school.getName())) {
-            throw new IllegalArgumentException("School name already exists. Please choose a different name.");
+        String originalSchoolName = school.getName();
+        String modifiedSchoolName = originalSchoolName;
+        String suffix = school.getDistrict().getName();
+
+        while (schoolRepository.existsByName(modifiedSchoolName)) {
+            modifiedSchoolName = originalSchoolName + " " + suffix;
         }
+
+        school.setName(modifiedSchoolName);
+
+        System.out.println("Unique school name assigned: " + modifiedSchoolName);
 
         SchoolEntity savedSchool = schoolRepository.save(school);
 
-        String username = savedSchool.getName();
+        String username = modifiedSchoolName;
 
-        if (userRepository.existsByUsername(username)) {
-            throw new IllegalArgumentException("Username already exists. Please choose a different school name.");
-        }
+        System.out.println("Unique username assigned: " + username);
 
         UserEntity schoolUser = new UserEntity();
         schoolUser.setUsername(username);
-        schoolUser.setEmail(savedSchool.getSchoolHeadEmail());
+        schoolUser.setEmail(school.getSchoolContact().getSchoolHeadEmail());
         schoolUser.setPassword(passwordEncoder.encode("@Password123"));
         schoolUser.setUserType("user");
-        schoolUser.setSchool(savedSchool);
+        schoolUser.setSchool(school);
+        schoolUser.setDivision(school.getDivision());
+        schoolUser.setDistrict((school.getDistrict()));
 
         userRepository.save(schoolUser);
 
@@ -71,28 +79,9 @@ public class SchoolService {
             schoolEntity.setClassification(schoolDetails.getClassification());
             schoolEntity.setName(schoolDetails.getName());
             schoolEntity.setAddress(schoolDetails.getAddress());
-            schoolEntity.setSchoolHead(schoolDetails.getSchoolHead());
             schoolEntity.setDesignation(schoolDetails.getDesignation());
-            schoolEntity.setSchoolHeadEmail(schoolDetails.getSchoolHeadEmail());
-            schoolEntity.setSchoolHeadNumber(schoolDetails.getSchoolHeadNumber());
-            schoolEntity.setLandline(schoolDetails.getLandline());
             schoolEntity.setDivision(schoolDetails.getDivision());
             schoolEntity.setDistrict(schoolDetails.getDistrict());
-            schoolEntity.setPropertyCustodian(schoolDetails.getPropertyCustodian());
-            schoolEntity.setPropertyCustodianNumber(schoolDetails.getPropertyCustodianNumber());
-            schoolEntity.setPropertyCustodianEmail(schoolDetails.getPropertyCustodianEmail());
-            schoolEntity.setEnergized(schoolDetails.getEnergized());
-            schoolEntity.setEnergizedRemarks(schoolDetails.getEnergizedRemarks());
-            schoolEntity.setLocalGridSupply(schoolDetails.getLocalGridSupply());
-            schoolEntity.setConnectivity(schoolDetails.getConnectivity());
-            schoolEntity.setSmart(schoolDetails.getSmart());
-            schoolEntity.setGlobe(schoolDetails.getGlobe());
-            schoolEntity.setDigitalNetwork(schoolDetails.getDigitalNetwork());
-            schoolEntity.setAm(schoolDetails.getAm());
-            schoolEntity.setFm(schoolDetails.getFm());
-            schoolEntity.setTv(schoolDetails.getTv());
-            schoolEntity.setCable(schoolDetails.getCable());
-            schoolEntity.setNtcRemark(schoolDetails.getNtcRemark());
 
             return schoolRepository.save(schoolEntity);
         } else {
@@ -106,59 +95,36 @@ public class SchoolService {
 
     @Transactional
     public List<SchoolEntity> createAllSchools(List<SchoolEntity> schools) {
-        // Iterate over each school to check for duplicate names and ensure uniqueness
         for (SchoolEntity school : schools) {
             String originalSchoolName = school.getName();
             String modifiedSchoolName = originalSchoolName;
-            int suffix = 2;
+            String suffix = school.getDistrict().getName();
 
-            // Check and ensure unique school name in the school repository
             while (schoolRepository.existsByName(modifiedSchoolName)) {
                 modifiedSchoolName = originalSchoolName + " " + suffix;
-                suffix++;  // Increment the suffix for each conflict
             }
 
-            // Set the modified unique name to the school
             school.setName(modifiedSchoolName);
-            System.out.println("Unique school name assigned: " + modifiedSchoolName); // Log the unique name
 
-            // Save the school entity first, making it persistent
+            System.out.println("Unique school name assigned: " + modifiedSchoolName);
+
             schoolRepository.save(school);
 
-            // Ensure that the username (derived from school name) is unique
-            String username = modifiedSchoolName; // Assuming username is derived from school name
-            while (userRepository.existsByUsername(username)) {
-                username = modifiedSchoolName + " " + suffix; // Update username with suffix if already exists
-                suffix++;
-            }
+            String username = modifiedSchoolName;
 
-            // Set the unique username for the user
-            System.out.println("Unique username assigned: " + username); // Log the username
+            System.out.println("Unique username assigned: " + username);
 
-            // Check if the school head's email is provided before creating the user
-            if (school.getSchoolHeadEmail() != null && !school.getSchoolHeadEmail().isEmpty()) {
-                // Now, create the user entity with the saved school
-                UserEntity schoolUser = new UserEntity();
-                schoolUser.setUsername(username);
-                schoolUser.setEmail(school.getSchoolHeadEmail()); // Use school head's email
-                schoolUser.setPassword(passwordEncoder.encode("@Password123")); // Default password
-                schoolUser.setUserType("user"); // Set user type as "user"
-                schoolUser.setSchool(school); // Link the already saved school to the user
-                schoolUser.setDivision(school.getDivision());
-                schoolUser.setDistrict((school.getDistrict()));
+            UserEntity schoolUser = new UserEntity();
+            schoolUser.setUsername(username);
+            schoolUser.setEmail(school.getSchoolContact().getSchoolHeadEmail());
+            schoolUser.setPassword(passwordEncoder.encode("@Password123"));
+            schoolUser.setUserType("user");
+            schoolUser.setSchool(school);
+            schoolUser.setDivision(school.getDivision());
+            schoolUser.setDistrict((school.getDistrict()));
 
-                // Save the user after associating the school
-                userRepository.save(schoolUser);
-            } else {
-                System.out.println("No email provided for school: " + modifiedSchoolName + ". Skipping user creation.");
-            }
+            userRepository.save(schoolUser);
         }
-
-        // Return the list of saved schools
         return schools;
     }
-
-
-
-
 }

@@ -47,4 +47,8 @@ public class ConfigurationService {
     public void saveAll(List<ConfigurationEntity> configurations) {
         configurationRepository.saveAll(configurations);
     }
+
+    public List<ConfigurationEntity> getConfigurationsByBatchId(Long batchId) {
+        return configurationRepository.findByBatch_BatchId(batchId);
+    }
 }

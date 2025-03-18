@@ -28,13 +28,12 @@ public class SchoolBatchListService {
     public SchoolBatchListEntity updateSchoolBatchList(Long id, SchoolBatchListEntity updatedBatchList) {
         Optional<SchoolBatchListEntity> existingBatchListOptional = schoolBatchListRepository.findById(id);
 
-        if (!existingBatchListOptional.isPresent()) {
+        if (existingBatchListOptional.isEmpty()) {
             throw new RuntimeException("School Batch List not found with id: " + id);
         }
 
         SchoolBatchListEntity existingBatchList = existingBatchListOptional.get();
 
-        // Updating the fields of the existing entity
         existingBatchList.setBatch(updatedBatchList.getBatch());
         existingBatchList.setSchool(updatedBatchList.getSchool());
         existingBatchList.setDeliveryDate(updatedBatchList.getDeliveryDate());
@@ -43,9 +42,7 @@ public class SchoolBatchListService {
         existingBatchList.setKeyStage(updatedBatchList.getKeyStage());
         existingBatchList.setRemarks(updatedBatchList.getRemarks());
         existingBatchList.setAccountable(updatedBatchList.getAccountable());
-        existingBatchList.setPackages(updatedBatchList.getPackages()); // Optional if you want to update the packages list
-
-        // Save and return the updated entity
+        existingBatchList.setPackages(updatedBatchList.getPackages());
         return schoolBatchListRepository.save(existingBatchList);
     }
 
@@ -59,5 +56,9 @@ public class SchoolBatchListService {
     
     public void saveAll(List<SchoolBatchListEntity> schoolBatchLists) {
         schoolBatchListRepository.saveAll(schoolBatchLists);
+    }
+
+    public List<SchoolBatchListEntity> getSchoolBatchListByBatchId(Long batchId) {
+        return schoolBatchListRepository.findByBatch_BatchId(batchId);
     }
 }
