@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
@@ -36,6 +37,7 @@ public class BatchEntity {
     private String remarks;
 
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<SchoolBatchListEntity> schoolBatchList;
 
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -62,4 +62,10 @@ public class SchoolBatchListController {
     public void deleteSchoolBatchList(@PathVariable Long id) {
         schoolBatchListService.deleteSchoolBatchList(id);
     }
+
+    @GetMapping("/batch/{batchId}")
+    public ResponseEntity<List<SchoolBatchListEntity>> getSchoolBatchListByBatch(@PathVariable Long batchId) {
+        List<SchoolBatchListEntity> schoolBatchLists = schoolBatchListService.getSchoolBatchListByBatchId(batchId);
+        return ResponseEntity.ok(schoolBatchLists);
+    }
 }
