@@ -1,6 +1,7 @@
 package com.example.DCP.Inventory.System.Service;
 
 import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
+import com.example.DCP.Inventory.System.Entity.DistrictEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Repository.SchoolBatchListRepository;
 import org.springframework.stereotype.Service;
@@ -60,5 +61,9 @@ public class SchoolBatchListService {
 
     public List<SchoolBatchListEntity> getSchoolBatchListByBatchId(Long batchId) {
         return schoolBatchListRepository.findByBatch_BatchId(batchId);
+    }
+
+    public List<SchoolBatchListEntity> getSchoolBatchListBySchoolId(Long schoolId) {
+        return schoolBatchListRepository.findBySchool_SchoolId(schoolId);
     }
 }

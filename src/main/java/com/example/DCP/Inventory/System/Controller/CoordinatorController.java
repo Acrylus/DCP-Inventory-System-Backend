@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -67,5 +68,11 @@ public class CoordinatorController {
         } catch (RuntimeException e) {
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Coordinator not found");
         }
+    }
+
+    @GetMapping("/school/{schoolId}")
+    public ResponseEntity<List<CoordinatorEntity>> getCoordinatorBySchool(@PathVariable Long schoolId) {
+        List<CoordinatorEntity> coordinator = coordinatorService.getCoordinatorBySchoolId(schoolId);
+        return ResponseEntity.ok(coordinator);
     }
 }

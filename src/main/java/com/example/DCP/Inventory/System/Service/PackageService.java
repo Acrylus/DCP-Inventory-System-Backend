@@ -1,6 +1,7 @@
 package com.example.DCP.Inventory.System.Service;
 
 import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
+import com.example.DCP.Inventory.System.Entity.DistrictEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Repository.PackageRepository;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,13 @@ public class PackageService {
     
     public void saveAll(List<PackageEntity> packages) {
         packageRepository.saveAll(packages);
+    }
+
+    public List<PackageEntity> getPackageBySchoolBatchListId(Long schoolBatchListId) {
+        return packageRepository.findBySchoolBatchList_SchoolBatchListId(schoolBatchListId);
+    }
+
+    public List<PackageEntity> getPackageByConfigurationId(Long configurationId) {
+        return packageRepository.findByConfiguration_ConfigurationId(configurationId);
     }
 }

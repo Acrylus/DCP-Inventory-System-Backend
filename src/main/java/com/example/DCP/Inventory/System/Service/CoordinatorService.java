@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Repository.CoordinatorRepository;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,9 @@ public class CoordinatorService {
 
     public void deleteCoordinator(Long id) {
         coordinatorRepository.deleteById(id);
+    }
+
+    public List<CoordinatorEntity> getCoordinatorBySchoolId(Long schoolId) {
+        return coordinatorRepository.findBySchool_SchoolId(schoolId);
     }
 }

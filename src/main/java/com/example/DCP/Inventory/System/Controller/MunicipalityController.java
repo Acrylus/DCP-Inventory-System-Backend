@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Entity.MunicipalityEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -67,5 +68,11 @@ public class MunicipalityController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add municipalities");
         }
+    }
+
+    @GetMapping("/division/{divisionId}")
+    public ResponseEntity<List<MunicipalityEntity>> getMunicipalityByDivision(@PathVariable Long divisionId) {
+        List<MunicipalityEntity> municipality = municipalityService.getMunicipalityByDivisionId(divisionId);
+        return ResponseEntity.ok(municipality);
     }
 }

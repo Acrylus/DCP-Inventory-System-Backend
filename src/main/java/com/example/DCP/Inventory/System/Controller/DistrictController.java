@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Entity.DistrictEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -78,5 +79,11 @@ public class DistrictController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add districts");
         }
+    }
+
+    @GetMapping("/division/{divisionId}")
+    public ResponseEntity<List<DistrictEntity>> getDistrictByDivision(@PathVariable Long divisionId) {
+        List<DistrictEntity> district = districtService.getDistrictByDivisionId(divisionId);
+        return ResponseEntity.ok(district);
     }
 }

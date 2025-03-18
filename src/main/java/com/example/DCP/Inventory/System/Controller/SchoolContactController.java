@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolContactEntity;
 import com.example.DCP.Inventory.System.Service.SchoolContactService;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
@@ -84,5 +85,11 @@ public class SchoolContactController {
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete school contact");
         }
+    }
+
+    @GetMapping("/school/{schoolId}")
+    public ResponseEntity<List<SchoolContactEntity>> getSchoolContactBySchool(@PathVariable Long schoolId) {
+        List<SchoolContactEntity> schoolContacts = schoolContactService.getSchoolBatchListBySchoolId(schoolId);
+        return ResponseEntity.ok(schoolContacts);
     }
 }
