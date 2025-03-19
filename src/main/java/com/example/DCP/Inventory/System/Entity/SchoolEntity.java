@@ -38,9 +38,6 @@ public class SchoolEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "designation")
-    private String designation;
-
     @Column(name = "previous_station")
     private String previousStation;
 

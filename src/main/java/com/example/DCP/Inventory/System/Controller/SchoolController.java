@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/school")
@@ -80,5 +81,26 @@ public class SchoolController {
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete school");
         }
+    }
+
+    @GetMapping("/school_record_id/{schoolId}")
+    public ResponseEntity<Long> getSchoolRecordId(@PathVariable String schoolId) {
+        // Check if there are duplicates first
+        if (schoolService.isDuplicateSchoolId(schoolId)) {
+            return ResponseEntity.ok(0L); // Return 0 if duplicate exists
+        }
+
+        // Fetch school record ID
+        return schoolService.findSchoolRecordIdBySchoolId(schoolId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @GetMapping("/school_record_id/name/{schoolName}")
+    public ResponseEntity<Long> getSchoolRecordIdByName(@PathVariable String schoolName) {
+        return schoolService.findSchoolRecordIdByName(schoolName)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

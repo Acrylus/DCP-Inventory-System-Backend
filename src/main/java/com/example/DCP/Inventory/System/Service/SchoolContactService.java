@@ -48,6 +48,7 @@ public class SchoolContactService {
         existingContact.setSchoolHead(updatedContact.getSchoolHead());
         existingContact.setSchoolHeadNumber(updatedContact.getSchoolHeadNumber());
         existingContact.setSchoolHeadEmail(updatedContact.getSchoolHeadEmail());
+        existingContact.setDesignation(updatedContact.getDesignation());
         existingContact.setPropertyCustodian(updatedContact.getPropertyCustodian());
         existingContact.setPropertyCustodianNumber(updatedContact.getPropertyCustodianNumber());
         existingContact.setPropertyCustodianEmail(updatedContact.getPropertyCustodianEmail());

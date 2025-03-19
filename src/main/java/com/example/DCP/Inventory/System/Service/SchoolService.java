@@ -68,7 +68,6 @@ public class SchoolService {
             schoolEntity.setClassification(schoolDetails.getClassification());
             schoolEntity.setName(schoolDetails.getName());
             schoolEntity.setAddress(schoolDetails.getAddress());
-            schoolEntity.setDesignation(schoolDetails.getDesignation());
             schoolEntity.setDivision(schoolDetails.getDivision());
             schoolEntity.setDistrict(schoolDetails.getDistrict());
 
@@ -119,4 +118,15 @@ public class SchoolService {
         return savedSchools;
     }
 
+    public Optional<Long> findSchoolRecordIdBySchoolId(String schoolId) {
+        return schoolRepository.findSchoolRecordIdBySchoolId(schoolId);
+    }
+
+    public Optional<Long> findSchoolRecordIdByName(String schoolName) {
+        return schoolRepository.findSchoolRecordIdByName(schoolName);
+    }
+
+    public boolean isDuplicateSchoolId(String schoolId) {
+        return schoolRepository.countBySchoolId(schoolId) > 1;
+    }
 }

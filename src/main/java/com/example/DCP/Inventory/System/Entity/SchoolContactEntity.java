@@ -1,6 +1,5 @@
 package com.example.DCP.Inventory.System.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +28,9 @@ public class SchoolContactEntity {
 
     @Column(name = "school_head_email")
     private String schoolHeadEmail;
+
+    @Column(name = "designation")
+    private String designation;
 
     @Column(name = "property_custodian")
     private String propertyCustodian;
