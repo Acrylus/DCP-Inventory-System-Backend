@@ -48,7 +48,7 @@ public class DivisionService {
         adminUser.setEmail(savedDivision.getItoEmail());
         adminUser.setPassword(passwordEncoder.encode("@Password123"));
         adminUser.setUserType("division");
-        adminUser.setDivision(savedDivision);
+        adminUser.setReferenceId(savedDivision.getDivisionId());
 
         userRepository.save(adminUser);
 

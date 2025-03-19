@@ -1,11 +1,9 @@
 package com.example.DCP.Inventory.System.Service;
 
-import com.example.DCP.Inventory.System.Entity.SchoolEntity;
-import com.example.DCP.Inventory.System.Entity.UserEntity;
-import com.example.DCP.Inventory.System.Repository.DistrictRepository;
-import com.example.DCP.Inventory.System.Repository.SchoolRepository;
-import com.example.DCP.Inventory.System.Repository.UserRepository;
+import com.example.DCP.Inventory.System.Entity.*;
+import com.example.DCP.Inventory.System.Repository.*;
 import jakarta.transaction.Transactional;
+import org.apache.catalina.User;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +18,11 @@ public class SchoolService {
     @Autowired
     private SchoolRepository schoolRepository;
     @Autowired
-    private DistrictRepository districtRepository;
+    private SchoolContactRepository schoolContactRepository;
+    @Autowired
+    private SchoolEnergyRepository schoolEnergyRepository;
+    @Autowired
+    private SchoolNTCRepository schoolNTCRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -39,8 +41,23 @@ public class SchoolService {
                 .orElseThrow(() -> new RuntimeException("School not found"));
     }
 
+    @Transactional
     public SchoolEntity createSchool(SchoolEntity school) {
-        return schoolRepository.save(school);
+        SchoolEntity savedSchool = schoolRepository.save(school);
+
+        SchoolContactEntity schoolContact = new SchoolContactEntity();
+        schoolContact.setSchool(school);
+        schoolContactRepository.save(schoolContact);
+
+        SchoolEnergyEntity schoolEnergy = new SchoolEnergyEntity();
+        schoolEnergy.setSchool(school);
+        schoolEnergyRepository.save(schoolEnergy);
+
+        SchoolNTCEntity schoolNTC = new SchoolNTCEntity();
+        schoolNTC.setSchool(school);
+        schoolNTCRepository.save(schoolNTC);
+
+        return savedSchool;
     }
 
     public SchoolEntity updateSchool(Long id, SchoolEntity schoolDetails) {
@@ -65,7 +82,41 @@ public class SchoolService {
         schoolRepository.deleteById(id);
     }
 
+    @Transactional
     public List<SchoolEntity> createAllSchools(List<SchoolEntity> schools) {
-        return schoolRepository.saveAll(schools);
+        List<SchoolEntity> savedSchools = schoolRepository.saveAll(schools);
+
+        for (SchoolEntity school : savedSchools) {
+            SchoolContactEntity schoolContact = new SchoolContactEntity();
+            schoolContact.setSchool(school);
+            schoolContactRepository.save(schoolContact);
+
+            SchoolEnergyEntity schoolEnergy = new SchoolEnergyEntity();
+            schoolEnergy.setSchool(school);
+            schoolEnergyRepository.save(schoolEnergy);
+
+            SchoolNTCEntity schoolNTC = new SchoolNTCEntity();
+            schoolNTC.setSchool(school);
+            schoolNTCRepository.save(schoolNTC);
+
+            String originalSchoolName = school.getName();
+            String modifiedSchoolName = originalSchoolName;
+            String suffix = school.getDistrict().getName();
+
+            if (schoolRepository.existsByName(modifiedSchoolName)) {
+                modifiedSchoolName = originalSchoolName + " " + suffix;
+            }
+
+
+            UserEntity user = new UserEntity();
+            user.setReferenceId(school.getSchoolRecordId());
+            user.setUserType("school");
+            user.setUsername(modifiedSchoolName);
+            user.setPassword(passwordEncoder.encode("@Password123"));
+            userRepository.save(user);
+        }
+
+        return savedSchools;
     }
+
 }

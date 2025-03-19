@@ -68,9 +68,7 @@ public class UserService {
         userEntity.setPassword(userDetails.getPassword());
         userEntity.setEmail(userDetails.getEmail());
         userEntity.setUserType(userDetails.getUserType());
-        userEntity.setDivision(userDetails.getDivision());
-        userEntity.setDistrict(userDetails.getDistrict());
-        userEntity.setSchool(userDetails.getSchool());
+        userEntity.setReferenceId(userDetails.getReferenceId());
         return userRepository.save(userEntity);
     }
 
@@ -106,60 +104,28 @@ public class UserService {
     @Transactional
     public String register(UserEntity user) {
         try {
-            if (user.getSchool() == null || user.getSchool().getSchoolRecordId() == null) {
-                throw new IllegalArgumentException("School ID must not be null");
-            }
-
-            SchoolEntity school = schoolRepository.findById(user.getSchool().getSchoolRecordId())
-                    .orElseThrow(() -> new IllegalArgumentException("School not found with ID: " + user.getSchool().getSchoolRecordId()));
-
-            SchoolContactEntity schoolContact = schoolContactRepository.findBySchool(school)
-                    .orElseThrow(() -> new IllegalArgumentException("SchoolContact must not be null for school ID: " + school.getSchoolRecordId()));
-
-            String originalSchoolName = school.getName();
-            String modifiedSchoolName = originalSchoolName;
-            String suffix = school.getDistrict().getName();
-
-            if (schoolRepository.existsByName(modifiedSchoolName)) {
-                modifiedSchoolName = originalSchoolName + " " + suffix;
-            }
-            school.setName(modifiedSchoolName);
-
-            System.out.println("Unique school name assigned: " + modifiedSchoolName);
-
-            String username = modifiedSchoolName;
-            System.out.println("Unique username assigned: " + username);
-
-            UserEntity schoolUser = new UserEntity();
-            schoolUser.setUsername(username);
-
-            schoolUser.setEmail(
-                    schoolContact.getSchoolHeadEmail() != null ? schoolContact.getSchoolHeadEmail() : "default@example.com"
-            );
-            schoolUser.setPassword(passwordEncoder.encode("@Password123"));
-            schoolUser.setUserType("school");
-            schoolUser.setSchool(school);
-            schoolUser.setDivision(school.getDivision());
-            schoolUser.setDistrict(school.getDistrict());
-
-            if (userRepository.findOneByUsername(username) != null) {
+            if (userRepository.findOneByUsername(user.getUsername()) != null) {
                 throw new IllegalArgumentException("Username already exists");
             }
 
-            if (!isValidPassword(user.getPassword())) {
-                throw new IllegalArgumentException("Password must be at least 8 characters and have at least one lowercase letter, one uppercase letter, one digit, and one special character");
+            if (!isValidUsername(user.getUsername())) {
+                throw new IllegalArgumentException("Username must be at least 3 characters long and may optionally contain a dot (.) or underscore (_) followed by one or more lowercase letters.");
             }
 
-            userRepository.save(schoolUser);
+            if (!isValidPassword(user.getPassword())) {
+                throw new IllegalArgumentException("Password must be at least 8 characters and have at least one lowercase letter, one uppercase letter, one digit, and one special character.");
+            }
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            userRepository.save(user);
+
             return "Registration Successful";
 
         } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
             return ex.getMessage();
         }
     }
-
-
 
 
     private boolean isValidUsername(String username) {

@@ -15,22 +15,12 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "division_id", nullable = true)
-    private DivisionEntity division;
-
-    @ManyToOne
-    @JoinColumn(name = "district_id", nullable = true)
-    private DistrictEntity district;
-
-    @ManyToOne
-    @JoinColumn(name = "school_id", nullable = true)
-    private SchoolEntity school;
+    @Column(name = "reference_id", nullable = false)
+    private Long referenceId;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
     @Column(name = "password", nullable = false)
     @Convert(converter = FieldConverter.class)
     private String password;
