@@ -81,7 +81,7 @@ public class SchoolEnergyController {
         }
     }
 
-    @GetMapping("/school/{schoolId}")
+    @GetMapping("/school/{schoolRecordId}")
     public ResponseEntity<List<SchoolEnergyEntity>> getSchoolBatchListBySchoolRecord(@PathVariable Long schoolRecordId) {
         List<SchoolEnergyEntity> schoolEnergy = schoolEnergyService.getSchoolBatchListBySchoolRecordId(schoolRecordId);
         return ResponseEntity.ok(schoolEnergy);

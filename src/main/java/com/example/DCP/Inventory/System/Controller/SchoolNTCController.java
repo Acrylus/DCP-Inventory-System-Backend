@@ -82,4 +82,10 @@ public class SchoolNTCController {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete School NTC");
         }
     }
+
+    @GetMapping("/school/{schoolRecordId}")
+    public ResponseEntity<List<SchoolNTCEntity>> getSchoolNTCBySchoolRecord(@PathVariable Long schoolRecordId) {
+        List<SchoolNTCEntity> schoolNTC = schoolNTCService.getSchoolNTCBySchoolRecordId(schoolRecordId);
+        return ResponseEntity.ok(schoolNTC);
+    }
 }

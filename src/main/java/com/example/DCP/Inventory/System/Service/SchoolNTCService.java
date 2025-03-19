@@ -62,4 +62,8 @@ public class SchoolNTCService {
             throw new RuntimeException("School NTC ID not found: " + id);
         }
     }
+
+    public List<SchoolNTCEntity> getSchoolNTCBySchoolRecordId(Long schoolRecordId) {
+        return schoolNTCRepository.findBySchool_SchoolRecordId(schoolRecordId);
+    }
 }
