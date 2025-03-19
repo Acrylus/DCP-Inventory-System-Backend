@@ -44,7 +44,7 @@ public class CoordinatorService {
         coordinatorRepository.deleteById(id);
     }
 
-    public List<CoordinatorEntity> getCoordinatorBySchoolId(Long schoolRecordId) {
+    public List<CoordinatorEntity> getCoordinatorBySchoolRecordId(Long schoolRecordId) {
         return coordinatorRepository.findBySchool_SchoolRecordId(schoolRecordId);
     }
 }

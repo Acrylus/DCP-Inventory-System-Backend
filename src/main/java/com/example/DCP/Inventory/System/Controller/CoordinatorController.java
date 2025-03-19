@@ -1,6 +1,5 @@
 package com.example.DCP.Inventory.System.Controller;
 
-import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -71,8 +70,8 @@ public class CoordinatorController {
     }
 
     @GetMapping("/school/{schoolId}")
-    public ResponseEntity<List<CoordinatorEntity>> getCoordinatorBySchool(@PathVariable Long schoolId) {
-        List<CoordinatorEntity> coordinator = coordinatorService.getCoordinatorBySchoolId(schoolId);
+    public ResponseEntity<List<CoordinatorEntity>> getCoordinatorBySchoolRecordId(@PathVariable Long schoolId) {
+        List<CoordinatorEntity> coordinator = coordinatorService.getCoordinatorBySchoolRecordId(schoolId);
         return ResponseEntity.ok(coordinator);
     }
 }

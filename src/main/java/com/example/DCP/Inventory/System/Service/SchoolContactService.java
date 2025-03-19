@@ -1,13 +1,11 @@
 package com.example.DCP.Inventory.System.Service;
 
-import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolContactEntity;
 import com.example.DCP.Inventory.System.Repository.SchoolContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -65,7 +63,7 @@ public class SchoolContactService {
         }
     }
 
-    public List<SchoolContactEntity> getSchoolBatchListBySchoolId(Long schoolId) {
-        return schoolContactRepository.findBySchool_SchoolId(schoolId);
+    public List<SchoolContactEntity> getSchoolBatchListBySchoolRecordId(Long schoolRecordId) {
+        return schoolContactRepository.findBySchool_SchoolRecordId(schoolRecordId);
     }
 }

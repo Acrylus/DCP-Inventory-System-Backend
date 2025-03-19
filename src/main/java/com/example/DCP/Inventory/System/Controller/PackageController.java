@@ -1,7 +1,5 @@
 package com.example.DCP.Inventory.System.Controller;
 
-import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
-import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
@@ -68,7 +66,7 @@ public class PackageController {
 
     @GetMapping("/school_batch_list/{schoolBatchListId}")
     public ResponseEntity<List<PackageEntity>> getPackageBySchoolBatchList(@PathVariable Long schoolBatchListId) {
-        List<PackageEntity> packageSchoolBatchList = packageService.getPackageBySchoolBatchListId(schoolBatchListId);
+        List<PackageEntity> packageSchoolBatchList = packageService.getPackageBySchoolBatchId(schoolBatchListId);
         return ResponseEntity.ok(packageSchoolBatchList);
     }
 

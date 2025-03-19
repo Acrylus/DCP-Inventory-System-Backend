@@ -1,6 +1,5 @@
 package com.example.DCP.Inventory.System.Service;
 
-import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolEnergyEntity;
 import com.example.DCP.Inventory.System.Repository.SchoolEnergyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class SchoolEnergyService {
         }
     }
 
-    public List<SchoolEnergyEntity> getSchoolBatchListBySchoolId(Long schoolId) {
-        return schoolEnergyRepository.findBySchool_SchoolId(schoolId);
+    public List<SchoolEnergyEntity> getSchoolBatchListBySchoolRecordId(Long schoolRecordId) {
+        return schoolEnergyRepository.findBySchool_SchoolRecordId(schoolRecordId);
     }
 }
