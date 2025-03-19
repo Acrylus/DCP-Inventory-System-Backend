@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.DistrictEntity;
 import com.example.DCP.Inventory.System.Entity.MunicipalityEntity;
 import com.example.DCP.Inventory.System.Repository.MunicipalityRepository;
 import org.springframework.stereotype.Service;
@@ -49,4 +50,7 @@ public class MunicipalityService {
         municipalityRepository.saveAll(municipalities);
     }
 
+    public List<MunicipalityEntity> getMunicipalityByDivisionId(Long divisionId) {
+        return municipalityRepository.findByDivision_DivisionId(divisionId);
+    }
 }

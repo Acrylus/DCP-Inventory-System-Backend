@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.CoordinatorEntity;
 import com.example.DCP.Inventory.System.Entity.DistrictEntity;
 import com.example.DCP.Inventory.System.Repository.DistrictRepository;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,9 @@ public class DistrictService {
 
     public void saveAll(List<DistrictEntity> districts) {
         districtRepository.saveAll(districts);
+    }
+
+    public List<DistrictEntity> getDistrictByDivisionId(Long divisionId) {
+        return districtRepository.findByDivision_DivisionId(divisionId);
     }
 }

@@ -16,10 +16,17 @@ public class BatchService {
     }
 
     public List<BatchEntity> getAllBatches() {
-        return batchRepository.findAll();
+        List<BatchEntity> batches = batchRepository.findAll();
+
+        for (BatchEntity batch : batches) {
+            batch.getSchoolBatchList();
+        }
+
+        return batchRepository.saveAll(batches); // Save updated counts
     }
 
     public BatchEntity getBatchById(Long id) {
+
         return batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found"));
     }

@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolContactEntity;
 import com.example.DCP.Inventory.System.Repository.SchoolContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +63,9 @@ public class SchoolContactService {
         } else {
             throw new RuntimeException("School Contact ID not found: " + id);
         }
+    }
+
+    public List<SchoolContactEntity> getSchoolBatchListBySchoolId(Long schoolId) {
+        return schoolContactRepository.findBySchool_SchoolId(schoolId);
     }
 }

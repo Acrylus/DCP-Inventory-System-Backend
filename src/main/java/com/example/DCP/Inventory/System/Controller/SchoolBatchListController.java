@@ -68,4 +68,10 @@ public class SchoolBatchListController {
         List<SchoolBatchListEntity> schoolBatchLists = schoolBatchListService.getSchoolBatchListByBatchId(batchId);
         return ResponseEntity.ok(schoolBatchLists);
     }
+
+    @GetMapping("/school/{schoolId}")
+    public ResponseEntity<List<SchoolBatchListEntity>> getSchoolBatchListBySchool(@PathVariable Long schoolId) {
+        List<SchoolBatchListEntity> schoolBatchListsSchool = schoolBatchListService.getSchoolBatchListBySchoolId(schoolId);
+        return ResponseEntity.ok(schoolBatchListsSchool);
+    }
 }
