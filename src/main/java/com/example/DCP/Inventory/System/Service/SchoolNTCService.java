@@ -22,6 +22,10 @@ public class SchoolNTCService {
         return schoolNTCRepository.save(schoolNTC);
     }
 
+    public List<SchoolNTCEntity> createAllSchoolNTC(List<SchoolNTCEntity> schoolNTCs) {
+        return schoolNTCRepository.saveAll(schoolNTCs);
+    }
+
     public List<SchoolNTCEntity> getAllSchoolNTCs() {
         return schoolNTCRepository.findAll();
     }

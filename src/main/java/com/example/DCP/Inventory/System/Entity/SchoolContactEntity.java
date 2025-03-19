@@ -14,8 +14,8 @@ public class SchoolContactEntity {
     @Column(name = "school_contact_id")
     private Long schoolContactId;
 
-    @OneToOne(mappedBy = "schoolContact")
-    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "school_record_id", nullable = false)
     private SchoolEntity school;
 
     @Column(name = "landline")

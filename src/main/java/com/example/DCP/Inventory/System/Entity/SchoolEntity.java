@@ -44,21 +44,6 @@ public class SchoolEntity {
     @Column(name = "previous_station")
     private String previousStation;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "school_contact_id", nullable = false)
-    @JsonIgnore
-    private SchoolContactEntity schoolContact;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "school_energy_id", nullable = false)
-    @JsonIgnore
-    private SchoolEnergyEntity schoolEnergy;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "school_ntc_id", nullable = false)
-    @JsonIgnore
-    private SchoolNTCEntity schoolNTC;
-
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference("school_coordinator")
     private List<CoordinatorEntity> coordinators;

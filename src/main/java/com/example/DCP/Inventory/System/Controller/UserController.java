@@ -52,7 +52,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@RequestBody UserEntity user) {
         try {
-            String registrationStatus = userService.registerUser(user);
+            String registrationStatus = userService.register(user);
             return registrationStatus.equals("Registration Successful")
                     ? NoDataResponse.noDataResponse(HttpStatus.CREATED, registrationStatus)
                     : NoDataResponse.noDataResponse(HttpStatus.BAD_REQUEST, registrationStatus);

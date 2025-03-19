@@ -14,8 +14,8 @@ public class SchoolNTCEntity {
     @Column(name = "school_ntc_id")
     private Long schoolNTCId;
 
-    @OneToOne(mappedBy = "schoolNTC")
-    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "school_record_id", nullable = false)
     private SchoolEntity school;
 
     @Column(name = "internet")

@@ -1,11 +1,11 @@
 package com.example.DCP.Inventory.System.Service;
 
-import com.example.DCP.Inventory.System.Entity.UserEntity;
+import com.example.DCP.Inventory.System.Entity.*;
 import com.example.DCP.Inventory.System.Exception.IncorrectPasswordException;
 import com.example.DCP.Inventory.System.Exception.LoggedOutException;
 import com.example.DCP.Inventory.System.Exception.UserIdNotFoundException;
 import com.example.DCP.Inventory.System.Exception.UsernameNotFoundException;
-import com.example.DCP.Inventory.System.Repository.UserRepository;
+import com.example.DCP.Inventory.System.Repository.*;
 import com.example.DCP.Inventory.System.Response.LoginResponse;
 import com.example.DCP.Inventory.System.Response.LoginRequest;
 import com.example.DCP.Inventory.System.Util.JwtUtil;
@@ -24,27 +24,36 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final SchoolRepository schoolRepository;
+
+    private final SchoolContactRepository schoolContactRepository;
+
+    private final SchoolEnergyRepository schoolEnergyRepository;
+
+    private final SchoolNTCRepository schoolNTCRepository;
+
     private final JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, SchoolRepository schoolRepository, SchoolContactRepository schoolContactRepository, SchoolEnergyRepository schoolEnergyRepository, SchoolNTCRepository schoolNTCRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil; // FIX: Inject JwtUtil correctly
+        this.schoolRepository = schoolRepository;
+        this.schoolContactRepository = schoolContactRepository;
+        this.schoolEnergyRepository = schoolEnergyRepository;
+        this.schoolNTCRepository = schoolNTCRepository;
+        this.jwtUtil = jwtUtil;
     }
 
-    // Fetch all users
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Fetch a user by ID
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserIdNotFoundException("User with ID " + id + " not found"));
     }
 
-    // Save a new user
     public UserEntity saveUser(UserEntity userEntity) {
         Optional<UserEntity> existingUser = userRepository.findByUsername(userEntity.getUsername());
         if (existingUser.isPresent()) {
@@ -53,7 +62,6 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    // Update an existing user
     public UserEntity updateUser(Long id, UserEntity userDetails) {
         UserEntity userEntity = getUserById(id);
         userEntity.setUsername(userDetails.getUsername());
@@ -66,7 +74,6 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    // Delete a user
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new UserIdNotFoundException("User with ID " + id + " not found");
@@ -78,15 +85,12 @@ public class UserService {
         UserEntity user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
-        // 🔥 FIX: Compare hashed password using passwordEncoder.matches()
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
 
-        // Generate JWT using JwtUtil
         String token = jwtUtil.generateToken(user.getUsername(), user.getUserId(), user.getUserType());
 
-        // Return response with JWT
         return new LoginResponse(user, token);
     }
 
@@ -100,19 +104,53 @@ public class UserService {
 
 
     @Transactional
-    public String registerUser(UserEntity user) {
+    public String register(UserEntity user) {
         try {
-            if (userRepository.findOneByUsername(user.getUsername()) != null) {
+            if (user.getSchool() == null || user.getSchool().getSchoolRecordId() == null) {
+                throw new IllegalArgumentException("School ID must not be null");
+            }
+
+            SchoolEntity school = schoolRepository.findById(user.getSchool().getSchoolRecordId())
+                    .orElseThrow(() -> new IllegalArgumentException("School not found with ID: " + user.getSchool().getSchoolRecordId()));
+
+            SchoolContactEntity schoolContact = schoolContactRepository.findBySchool(school)
+                    .orElseThrow(() -> new IllegalArgumentException("SchoolContact must not be null for school ID: " + school.getSchoolRecordId()));
+
+            String originalSchoolName = school.getName();
+            String modifiedSchoolName = originalSchoolName;
+            String suffix = school.getDistrict().getName();
+
+            if (schoolRepository.existsByName(modifiedSchoolName)) {
+                modifiedSchoolName = originalSchoolName + " " + suffix;
+            }
+            school.setName(modifiedSchoolName);
+
+            System.out.println("Unique school name assigned: " + modifiedSchoolName);
+
+            String username = modifiedSchoolName;
+            System.out.println("Unique username assigned: " + username);
+
+            UserEntity schoolUser = new UserEntity();
+            schoolUser.setUsername(username);
+
+            schoolUser.setEmail(
+                    schoolContact.getSchoolHeadEmail() != null ? schoolContact.getSchoolHeadEmail() : "default@example.com"
+            );
+            schoolUser.setPassword(passwordEncoder.encode("@Password123"));
+            schoolUser.setUserType("school");
+            schoolUser.setSchool(school);
+            schoolUser.setDivision(school.getDivision());
+            schoolUser.setDistrict(school.getDistrict());
+
+            if (userRepository.findOneByUsername(username) != null) {
                 throw new IllegalArgumentException("Username already exists");
-            } else if (!isValidUsername(user.getUsername())) {
-                throw new IllegalArgumentException("Username must be at least 3 characters long and may optionally contain a dot (.) or underscore (_) followed by one or more lowercase letters.");
-            } else if (!isValidPassword(user.getPassword())) {
+            }
+
+            if (!isValidPassword(user.getPassword())) {
                 throw new IllegalArgumentException("Password must be at least 8 characters and have at least one lowercase letter, one uppercase letter, one digit, and one special character");
             }
 
-            // ✅ Save the user
-            userRepository.save(user);
-
+            userRepository.save(schoolUser);
             return "Registration Successful";
 
         } catch (IllegalArgumentException ex) {
@@ -120,6 +158,8 @@ public class UserService {
             return ex.getMessage();
         }
     }
+
+
 
 
     private boolean isValidUsername(String username) {

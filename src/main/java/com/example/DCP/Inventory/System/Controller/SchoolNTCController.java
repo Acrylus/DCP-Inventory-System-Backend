@@ -2,12 +2,13 @@ package com.example.DCP.Inventory.System.Controller;
 
 import com.example.DCP.Inventory.System.Entity.SchoolNTCEntity;
 import com.example.DCP.Inventory.System.Service.SchoolNTCService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.DCP.Inventory.System.Response.NoDataResponse;
+import com.example.DCP.Inventory.System.Response.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/school_ntc")
@@ -15,47 +16,70 @@ public class SchoolNTCController {
 
     private final SchoolNTCService schoolNTCService;
 
-    @Autowired
     public SchoolNTCController(SchoolNTCService schoolNTCService) {
         this.schoolNTCService = schoolNTCService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<SchoolNTCEntity> createSchoolNTC(@RequestBody SchoolNTCEntity schoolNTC) {
-        SchoolNTCEntity createdSchoolNTC = schoolNTCService.createSchoolNTC(schoolNTC);
-        return ResponseEntity.ok(createdSchoolNTC);
+    public ResponseEntity<Object> createSchoolNTC(@RequestBody SchoolNTCEntity schoolNTC) {
+        try {
+            SchoolNTCEntity createdSchoolNTC = schoolNTCService.createSchoolNTC(schoolNTC);
+            return Response.response(HttpStatus.CREATED, "School NTC created successfully", createdSchoolNTC);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create School NTC");
+        }
+    }
+
+    @PostMapping("/create_all")
+    public ResponseEntity<Object> createAllSchoolNTC(@RequestBody List<SchoolNTCEntity> schoolNTCs) {
+        try {
+            List<SchoolNTCEntity> createdSchoolNTCs = schoolNTCService.createAllSchoolNTC(schoolNTCs);
+            return Response.response(HttpStatus.CREATED, "School NTCs created successfully", createdSchoolNTCs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create School NTCs");
+        }
     }
 
     @GetMapping("/get_all")
-    public ResponseEntity<List<SchoolNTCEntity>> getAllSchoolNTCs() {
-        List<SchoolNTCEntity> schoolNTCs = schoolNTCService.getAllSchoolNTCs();
-        return ResponseEntity.ok(schoolNTCs);
+    public ResponseEntity<Object> getAllSchoolNTCs() {
+        try {
+            List<SchoolNTCEntity> schoolNTCs = schoolNTCService.getAllSchoolNTCs();
+            return Response.response(HttpStatus.OK, "School NTCs fetched successfully", schoolNTCs);
+        } catch (Exception e) {
+            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch School NTCs");
+        }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<SchoolNTCEntity> getSchoolNTCById(@PathVariable Long id) {
-        Optional<SchoolNTCEntity> schoolNTC = schoolNTCService.getSchoolNTCById(id);
-        return schoolNTC.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Object> getSchoolNTCById(@PathVariable Long id) {
+        try {
+            SchoolNTCEntity schoolNTC = schoolNTCService.getSchoolNTCById(id)
+                    .orElseThrow(() -> new RuntimeException("School energy not found"));
+            return Response.response(HttpStatus.OK, "School NTC fetched successfully", schoolNTC);
+        } catch (Exception e) {
+            return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "School NTC not found");
+        }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<SchoolNTCEntity> updateSchoolNTC(@PathVariable Long id, @RequestBody SchoolNTCEntity updatedNTC) {
+    public ResponseEntity<Object> updateSchoolNTC(@PathVariable Long id, @RequestBody SchoolNTCEntity updatedNTC) {
         try {
             SchoolNTCEntity updatedSchoolNTC = schoolNTCService.updateSchoolNTC(id, updatedNTC);
-            return ResponseEntity.ok(updatedSchoolNTC);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return Response.response(HttpStatus.OK, "School NTC updated successfully", updatedSchoolNTC);
+        } catch (Exception e) {
+            return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "School NTC not found");
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteSchoolNTC(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteSchoolNTC(@PathVariable Long id) {
         try {
             schoolNTCService.deleteSchoolNTC(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "School NTC deleted successfully");
+        } catch (Exception e) {
+            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete School NTC");
         }
     }
 }

@@ -14,8 +14,8 @@ public class SchoolEnergyEntity {
     @Column(name = "school_energy_id")
     private Long schoolEnergyId;
 
-    @OneToOne(mappedBy = "schoolEnergy")
-    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "school_record_id", nullable = false)
     private SchoolEntity school;
 
     @Column(name = "energized")

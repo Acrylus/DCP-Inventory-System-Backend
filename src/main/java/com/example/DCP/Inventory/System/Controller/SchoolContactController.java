@@ -52,6 +52,7 @@ public class SchoolContactController {
             SchoolContactEntity createdContact = schoolContactService.createSchoolContact(schoolContact);
             return Response.response(HttpStatus.CREATED, "School contact created successfully", createdContact);
         } catch (Exception e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create school contact");
         }
     }

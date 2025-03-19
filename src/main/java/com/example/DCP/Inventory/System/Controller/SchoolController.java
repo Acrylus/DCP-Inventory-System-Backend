@@ -43,7 +43,7 @@ public class SchoolController {
     @PostMapping("/create")
     public ResponseEntity<Object> createSchool(@RequestBody SchoolEntity school) {
         try {
-            SchoolEntity createdSchool = schoolService.saveSchool(school);
+            SchoolEntity createdSchool = schoolService.createSchool(school);
             return Response.response(HttpStatus.CREATED, "School created successfully", createdSchool);
         } catch (Exception e) {
             e.printStackTrace();

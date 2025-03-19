@@ -36,15 +36,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless JWT authentication
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/**").permitAll() // Public endpoints
-                        .requestMatchers("/division/**").permitAll()
-                        .requestMatchers("/district/**").permitAll()
-                        .requestMatchers("/municipality/**").permitAll()
-                        .requestMatchers("/batch/**").permitAll()
-                        .requestMatchers("/school/**").permitAll()
-                        .requestMatchers("/school_batch_list/**").permitAll()
-                        .requestMatchers("/configuration/**").permitAll()
-                        .anyRequest().authenticated() // Secure other endpoints
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No session, use JWT
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
