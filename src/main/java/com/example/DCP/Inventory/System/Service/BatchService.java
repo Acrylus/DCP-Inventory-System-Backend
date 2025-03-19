@@ -1,6 +1,7 @@
 package com.example.DCP.Inventory.System.Service;
 
 import com.example.DCP.Inventory.System.Entity.BatchEntity;
+import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import com.example.DCP.Inventory.System.Repository.BatchRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +20,27 @@ public class BatchService {
         List<BatchEntity> batches = batchRepository.findAll();
 
         for (BatchEntity batch : batches) {
-            batch.getSchoolBatchList();
+            int totalPackages = batch.getSchoolBatchList().stream()
+                    .mapToInt(SchoolBatchListEntity::getNumberOfPackage)
+                    .sum();
+
+            batch.setNumberOfPackage(totalPackages);
         }
 
-        return batchRepository.saveAll(batches); // Save updated counts
+        return batchRepository.saveAll(batches);
     }
 
     public BatchEntity getBatchById(Long id) {
-
-        return batchRepository.findById(id)
+        BatchEntity batch = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found"));
+
+        int totalPackages = batch.getSchoolBatchList().stream()
+                .mapToInt(SchoolBatchListEntity::getNumberOfPackage)
+                .sum();
+
+        batch.setNumberOfPackage(totalPackages);
+
+        return batchRepository.save(batch);
     }
 
     public BatchEntity updateBatch(Long id, BatchEntity batchDetails) {
