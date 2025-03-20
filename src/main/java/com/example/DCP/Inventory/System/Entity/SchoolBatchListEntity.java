@@ -20,7 +20,6 @@ public class SchoolBatchListEntity {
 
     @ManyToOne
     @JoinColumn(name = "batch_id", nullable = false)
-    @JsonBackReference
     private BatchEntity batch;
 
     @ManyToOne
