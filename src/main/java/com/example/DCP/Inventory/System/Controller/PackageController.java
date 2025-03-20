@@ -64,9 +64,9 @@ public class PackageController {
         }
     }
 
-    @GetMapping("/school_batch_list/{schoolBatchListId}")
-    public ResponseEntity<List<PackageEntity>> getPackageBySchoolBatchList(@PathVariable Long schoolBatchListId) {
-        List<PackageEntity> packageSchoolBatchList = packageService.getPackageBySchoolBatchId(schoolBatchListId);
+    @GetMapping("/school_batch_list/{schoolBatchId}")
+    public ResponseEntity<List<PackageEntity>> getPackageBySchoolBatchList(@PathVariable Long schoolBatchId) {
+        List<PackageEntity> packageSchoolBatchList = packageService.getPackageBySchoolBatchId(schoolBatchId);
         return ResponseEntity.ok(packageSchoolBatchList);
     }
 
