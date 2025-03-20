@@ -34,7 +34,6 @@ public class PackageService {
 
         PackageEntity existingPackage = existingPackageOptional.get();
 
-        existingPackage.setItem(packageDetails.getItem());
         existingPackage.setStatus(packageDetails.getStatus());
         existingPackage.setComponent(packageDetails.getComponent());
         existingPackage.setSerialNumber(packageDetails.getSerialNumber());

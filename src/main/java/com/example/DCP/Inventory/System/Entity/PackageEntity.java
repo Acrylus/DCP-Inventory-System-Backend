@@ -22,9 +22,6 @@ public class PackageEntity {
     @JoinColumn(name = "configuration_id", nullable = false)
     private ConfigurationEntity configuration;
 
-    @Column(name = "item", nullable = false)
-    private String item;
-
     @Column(name = "status")
     private String status;
 
