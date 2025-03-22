@@ -44,11 +44,9 @@ public class BatchService {
     }
 
     public BatchEntity updateBatch(Long id, BatchEntity batchDetails) {
-        // Check if the batch exists
         BatchEntity batch = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found"));
 
-        // Update the batch fields with the details from batchDetails
         batch.setBatchName(batchDetails.getBatchName());
         batch.setBudgetYear(batchDetails.getBudgetYear());
         batch.setDeliveryYear(batchDetails.getDeliveryYear());
@@ -57,11 +55,9 @@ public class BatchService {
         batch.setNumberOfPackage(batchDetails.getNumberOfPackage());
         batch.setRemarks(batchDetails.getRemarks());
 
-        // Update associated entities
         batch.setSchoolBatchList(batchDetails.getSchoolBatchList());
         batch.setConfigurations(batchDetails.getConfigurations());
 
-        // Save and return the updated batch
         return batchRepository.save(batch);
     }
 

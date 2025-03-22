@@ -1,7 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
-import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
 import com.example.DCP.Inventory.System.Service.PackageService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/package")
@@ -40,18 +40,12 @@ public class PackageController {
         return Response.response(HttpStatus.CREATED, "Package created successfully", createdPackage);
     }
 
-    // Update package by ID
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Object> updatePackage(@PathVariable Long id, @RequestBody PackageEntity packageDetails) {
-        PackageEntity updatedPackage = packageService.updatePackage(id, packageDetails);
-        return Response.response(HttpStatus.OK, "Package updated successfully", updatedPackage);
-    }
-
-    // Delete package by ID
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deletePackage(@PathVariable Long id) {
-        packageService.deletePackage(id);
-        return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "Package deleted successfully");
+    @DeleteMapping("/delete/{packageId}/school_batch/{schoolBatchId}")
+    public ResponseEntity<String> deletePackage(
+            @PathVariable Long packageId,
+            @PathVariable Long schoolBatchId) {
+        packageService.deletePackage(schoolBatchId, packageId);
+        return ResponseEntity.ok("Package deleted successfully.");
     }
 
     @PostMapping("/create_all")
@@ -74,5 +68,26 @@ public class PackageController {
     public ResponseEntity<List<PackageEntity>> getPackageByConfiguration(@PathVariable Long configurationId) {
         List<PackageEntity> packageConfiguration = packageService.getPackageByConfigurationId(configurationId);
         return ResponseEntity.ok(packageConfiguration);
+    }
+
+    @GetMapping("/get/{packageId}/school_batch/{schoolBatchId}")
+    public PackageEntity getUniquePackage(@PathVariable Long packageId, @PathVariable Long schoolBatchId) {
+        return packageService.getUniquePackage(schoolBatchId, packageId);
+    }
+
+    @PutMapping("/update/{packageId}/school_batch/{schoolBatchId}")
+    public ResponseEntity<PackageEntity> updatePackage(@PathVariable Long packageId, @PathVariable Long schoolBatchId, @RequestBody PackageEntity updatedPackage) {
+
+        PackageEntity updated = packageService.updatePackage(schoolBatchId, packageId, updatedPackage);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/patch/{packageId}/school_batch/{schoolBatchId}")
+    public ResponseEntity<PackageEntity> patchPackage(
+            @PathVariable Long packageId,
+            @PathVariable Long schoolBatchId,
+            @RequestBody Map<String, Object> updates) {
+        PackageEntity updatedPackage = packageService.patchPackage(schoolBatchId, packageId, updates);
+        return ResponseEntity.ok(updatedPackage);
     }
 }

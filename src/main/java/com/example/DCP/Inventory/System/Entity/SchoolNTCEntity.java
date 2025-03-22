@@ -41,4 +41,10 @@ public class SchoolNTCEntity {
 
     @Column(name = "remark")
     private String remark;
+
+    @Column(name = "provider")
+    private String provider;
+
+    @Column(name = "speed")
+    private String speed;
 }

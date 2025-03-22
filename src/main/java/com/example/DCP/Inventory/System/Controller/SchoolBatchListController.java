@@ -43,8 +43,14 @@ public class SchoolBatchListController {
     }
 
     @PostMapping("create")
-    public SchoolBatchListEntity createSchoolBatchList(@RequestBody SchoolBatchListEntity batchSchoolList) {
-        return schoolBatchListService.saveSchoolBatchList(batchSchoolList);
+    public ResponseEntity<Object> createSchoolBatchList(@RequestBody SchoolBatchListEntity batchSchoolList) {
+        try {
+            schoolBatchListService.saveSchoolBatchList(batchSchoolList);
+            return ResponseEntity.status(HttpStatus.CREATED).body("School Batch List added successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add School Batch List");
+        }
     }
     
     @PostMapping("/create_all")
@@ -53,6 +59,7 @@ public class SchoolBatchListController {
         	schoolBatchListService.saveAll(schoolBatchList);
             return ResponseEntity.status(HttpStatus.CREATED).body("School Batch Lists added successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add School Batch Lists");
         }
     }
