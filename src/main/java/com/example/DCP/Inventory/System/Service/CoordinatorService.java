@@ -33,7 +33,7 @@ public class CoordinatorService {
         coordinatorEntity.setName(coordinatorDetails.getName());
         coordinatorEntity.setEmail(coordinatorDetails.getEmail());
         coordinatorEntity.setNumber(coordinatorDetails.getNumber());
-        coordinatorEntity.setSchool(coordinatorDetails.getSchool());
+        coordinatorEntity.setSchoolContact(coordinatorDetails.getSchoolContact());
         coordinatorEntity.setDesignation(coordinatorDetails.getDesignation());
         coordinatorEntity.setRemarks(coordinatorDetails.getRemarks());
 
@@ -45,6 +45,6 @@ public class CoordinatorService {
     }
 
     public List<CoordinatorEntity> getCoordinatorBySchoolRecordId(Long schoolRecordId) {
-        return coordinatorRepository.findBySchool_SchoolRecordId(schoolRecordId);
+        return coordinatorRepository.findBySchoolContact_School_SchoolRecordId(schoolRecordId);
     }
 }

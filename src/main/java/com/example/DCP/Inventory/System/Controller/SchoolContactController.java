@@ -88,8 +88,8 @@ public class SchoolContactController {
     }
 
     @GetMapping("/school/{schoolRecordId}")
-    public ResponseEntity<List<SchoolContactEntity>> getSchoolBatchListBySchool(@PathVariable Long schoolRecordId) {
-        List<SchoolContactEntity> schoolContacts = schoolContactService.getSchoolBatchListBySchoolRecordId(schoolRecordId);
+    public ResponseEntity<SchoolContactEntity> getSchoolBatchListBySchool(@PathVariable Long schoolRecordId) {
+        SchoolContactEntity schoolContacts = schoolContactService.getSchoolBatchListBySchoolRecordId(schoolRecordId);
         return ResponseEntity.ok(schoolContacts);
     }
 }

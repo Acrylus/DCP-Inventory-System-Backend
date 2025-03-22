@@ -20,6 +20,7 @@ public class SchoolBatchListEntity {
 
     @ManyToOne
     @JoinColumn(name = "batch_id", nullable = false)
+    @JsonIgnoreProperties({"configurations"})
     private BatchEntity batch;
 
     @ManyToOne

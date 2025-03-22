@@ -1,10 +1,15 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.ProviderEntity;
+import com.example.DCP.Inventory.System.Entity.ProviderIdEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolNTCEntity;
+import com.example.DCP.Inventory.System.Repository.ProviderRepository;
 import com.example.DCP.Inventory.System.Repository.SchoolNTCRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,10 +17,12 @@ import java.util.Optional;
 public class SchoolNTCService {
 
     private final SchoolNTCRepository schoolNTCRepository;
+    private final ProviderRepository providerRepository;
 
     @Autowired
-    public SchoolNTCService(SchoolNTCRepository schoolNTCRepository) {
+    public SchoolNTCService(SchoolNTCRepository schoolNTCRepository, ProviderRepository providerRepository) {
         this.schoolNTCRepository = schoolNTCRepository;
+        this.providerRepository = providerRepository;
     }
 
     public SchoolNTCEntity createSchoolNTC(SchoolNTCEntity schoolNTC) {
@@ -34,6 +41,7 @@ public class SchoolNTCService {
         return schoolNTCRepository.findById(id);
     }
 
+    @Transactional
     public SchoolNTCEntity updateSchoolNTC(Long id, SchoolNTCEntity updatedNTC) {
         Optional<SchoolNTCEntity> existingNTCOptional = schoolNTCRepository.findById(id);
 
@@ -43,6 +51,10 @@ public class SchoolNTCService {
 
         SchoolNTCEntity existingNTC = existingNTCOptional.get();
 
+        // **Step 1: Remove all existing providers before updating**
+        providerRepository.deleteBySchoolNTC(existingNTC);
+
+        // **Step 2: Update fields**
         existingNTC.setInternet(updatedNTC.getInternet());
         existingNTC.setPldt(updatedNTC.getPldt());
         existingNTC.setGlobe(updatedNTC.getGlobe());
@@ -52,8 +64,36 @@ public class SchoolNTCService {
         existingNTC.setCable(updatedNTC.getCable());
         existingNTC.setRemark(updatedNTC.getRemark());
 
-        return schoolNTCRepository.save(existingNTC);
+        // **Step 3: Save Updated School NTC**
+        SchoolNTCEntity savedNTC = schoolNTCRepository.save(existingNTC);
+
+        // **Step 4: Get the next available providerId**
+        Long maxProviderId = providerRepository.findMaxProviderId(savedNTC.getSchoolNTCId());
+        Long nextProviderId = (maxProviderId == null) ? 1 : maxProviderId + 1;
+
+        // **Step 5: Add New Providers**
+        List<ProviderEntity> newProviders = new ArrayList<>();
+        for (ProviderEntity provider : updatedNTC.getProviders()) {
+            ProviderIdEntity providerIdEntity = new ProviderIdEntity();
+            providerIdEntity.setProviderId(nextProviderId++);
+            providerIdEntity.setSchoolNTCId(savedNTC.getSchoolNTCId());
+
+            ProviderEntity newProvider = new ProviderEntity();
+            newProvider.setId(providerIdEntity);
+            newProvider.setSchoolNTC(savedNTC);
+            newProvider.setName(provider.getName());
+            newProvider.setSpeed(provider.getSpeed());
+            newProvider.setUnit(provider.getUnit());
+
+            newProviders.add(newProvider);
+        }
+
+        // **Step 6: Save All New Providers**
+        providerRepository.saveAll(newProviders);
+
+        return savedNTC;
     }
+
 
     public void deleteSchoolNTC(Long id) {
         if (schoolNTCRepository.existsById(id)) {
@@ -63,7 +103,7 @@ public class SchoolNTCService {
         }
     }
 
-    public List<SchoolNTCEntity> getSchoolNTCBySchoolRecordId(Long schoolRecordId) {
+    public SchoolNTCEntity getSchoolNTCBySchoolRecordId(Long schoolRecordId) {
         return schoolNTCRepository.findBySchool_SchoolRecordId(schoolRecordId);
     }
 }

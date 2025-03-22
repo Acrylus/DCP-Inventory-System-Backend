@@ -42,10 +42,6 @@ public class SchoolEntity {
     private String previousStation;
 
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference("school_coordinator")
-    private List<CoordinatorEntity> coordinators;
-
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference("school_batch_list")
     private List<SchoolBatchListEntity> schoolBatchList;
 }

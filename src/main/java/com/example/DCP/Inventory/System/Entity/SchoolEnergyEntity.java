@@ -26,4 +26,7 @@ public class SchoolEnergyEntity {
 
     @Column(name = "local_grid_supply")
     private Boolean localGridSupply;
+
+    @Column(name = "type")
+    private Boolean type;
 }

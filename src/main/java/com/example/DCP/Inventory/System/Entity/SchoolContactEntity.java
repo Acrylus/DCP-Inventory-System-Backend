@@ -1,7 +1,10 @@
 package com.example.DCP.Inventory.System.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Table(name = "school_contact")
@@ -41,4 +44,6 @@ public class SchoolContactEntity {
     @Column(name = "property_custodian_email")
     private String propertyCustodianEmail;
 
+    @OneToMany(mappedBy = "schoolContact", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoordinatorEntity> coordinators;
 }

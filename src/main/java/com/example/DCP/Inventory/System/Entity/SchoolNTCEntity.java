@@ -1,8 +1,11 @@
 package com.example.DCP.Inventory.System.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Table(name = "school_ntc")
@@ -42,9 +45,8 @@ public class SchoolNTCEntity {
     @Column(name = "remark")
     private String remark;
 
-    @Column(name = "provider")
-    private String provider;
+    @OneToMany(mappedBy = "schoolNTC", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProviderEntity> providers;
 
-    @Column(name = "speed")
-    private String speed;
 }

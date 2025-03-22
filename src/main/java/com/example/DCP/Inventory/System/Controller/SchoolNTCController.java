@@ -84,8 +84,8 @@ public class SchoolNTCController {
     }
 
     @GetMapping("/school/{schoolRecordId}")
-    public ResponseEntity<List<SchoolNTCEntity>> getSchoolNTCBySchoolRecord(@PathVariable Long schoolRecordId) {
-        List<SchoolNTCEntity> schoolNTC = schoolNTCService.getSchoolNTCBySchoolRecordId(schoolRecordId);
+    public ResponseEntity<SchoolNTCEntity> getSchoolNTCBySchoolRecord(@PathVariable Long schoolRecordId) {
+        SchoolNTCEntity schoolNTC = schoolNTCService.getSchoolNTCBySchoolRecordId(schoolRecordId);
         return ResponseEntity.ok(schoolNTC);
     }
 }

@@ -58,7 +58,7 @@ public class SchoolEnergyService {
         }
     }
 
-    public List<SchoolEnergyEntity> getSchoolBatchListBySchoolRecordId(Long schoolRecordId) {
+    public SchoolEnergyEntity getSchoolBatchListBySchoolRecordId(Long schoolRecordId) {
         return schoolEnergyRepository.findBySchool_SchoolRecordId(schoolRecordId);
     }
 }

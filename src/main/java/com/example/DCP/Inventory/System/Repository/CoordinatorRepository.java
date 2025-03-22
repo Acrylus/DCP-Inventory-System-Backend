@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CoordinatorRepository extends JpaRepository<CoordinatorEntity, Long> {
-    List<CoordinatorEntity> findBySchool_SchoolRecordId(Long schoolRecordId);
+    List<CoordinatorEntity> findBySchoolContact_School_SchoolRecordId(Long schoolRecordId);
 }

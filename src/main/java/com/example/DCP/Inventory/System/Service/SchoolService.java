@@ -2,6 +2,7 @@ package com.example.DCP.Inventory.System.Service;
 
 import com.example.DCP.Inventory.System.Entity.*;
 import com.example.DCP.Inventory.System.Repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.catalina.User;
 import org.hibernate.Hibernate;
@@ -77,9 +78,18 @@ public class SchoolService {
         }
     }
 
+    @Transactional
     public void deleteSchool(Long id) {
-        schoolRepository.deleteById(id);
+        if (schoolRepository.existsById(id)) {
+            schoolNTCRepository.deleteBySchoolId(id);
+            schoolEnergyRepository.deleteBySchoolId(id);
+            schoolContactRepository.deleteBySchoolId(id);
+            schoolRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("School with ID " + id + " not found.");
+        }
     }
+
 
     @Transactional
     public List<SchoolEntity> createAllSchools(List<SchoolEntity> schools) {

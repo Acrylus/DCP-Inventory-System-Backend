@@ -14,8 +14,8 @@ public class CoordinatorEntity {
     private Long coordinatorId;
 
     @ManyToOne
-    @JoinColumn(name = "school_id", nullable = false)
-    private SchoolEntity school;
+    @JoinColumn(name = "school_contact_id", nullable = false)
+    private SchoolContactEntity schoolContact;
 
     @Column(name = "name", nullable = false)
     private String name;

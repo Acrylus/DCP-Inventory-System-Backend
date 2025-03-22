@@ -63,7 +63,7 @@ public class SchoolContactService {
         }
     }
 
-    public List<SchoolContactEntity> getSchoolBatchListBySchoolRecordId(Long schoolRecordId) {
+    public SchoolContactEntity getSchoolBatchListBySchoolRecordId(Long schoolRecordId) {
         return schoolContactRepository.findBySchool_SchoolRecordId(schoolRecordId);
     }
 }
