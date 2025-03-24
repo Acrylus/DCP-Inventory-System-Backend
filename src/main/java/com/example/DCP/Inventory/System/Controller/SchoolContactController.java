@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.SchoolContactDTOEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolContactEntity;
 import com.example.DCP.Inventory.System.Service.SchoolContactService;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
@@ -24,7 +25,7 @@ public class SchoolContactController {
     @GetMapping("/get_all")
     public ResponseEntity<Object> getAllSchoolContacts() {
         try {
-            List<SchoolContactEntity> contacts = schoolContactService.getAllSchoolContacts();
+            List<SchoolContactDTOEntity> contacts = schoolContactService.getAllSchoolContacts();
             return Response.response(HttpStatus.OK, "School contacts fetched successfully", contacts);
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch school contacts");
@@ -73,6 +74,7 @@ public class SchoolContactController {
             SchoolContactEntity updated = schoolContactService.updateSchoolContact(id, updatedContact);
             return Response.response(HttpStatus.OK, "School contact updated successfully", updated);
         } catch (Exception e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "School contact not found");
         }
     }

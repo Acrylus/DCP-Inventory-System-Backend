@@ -1,6 +1,9 @@
 package com.example.DCP.Inventory.System.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,7 +32,7 @@ public class SchoolContactEntity {
     @Column(name = "school_head_number")
     private String schoolHeadNumber;
 
-    @Column(name = "school_head_email")
+    @Column(name = "school_head_email") 
     private String schoolHeadEmail;
 
     @Column(name = "designation")
@@ -45,5 +48,6 @@ public class SchoolContactEntity {
     private String propertyCustodianEmail;
 
     @OneToMany(mappedBy = "schoolContact", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CoordinatorEntity> coordinators;
 }

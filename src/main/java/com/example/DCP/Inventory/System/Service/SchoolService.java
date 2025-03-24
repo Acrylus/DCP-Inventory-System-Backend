@@ -69,7 +69,6 @@ public class SchoolService {
             schoolEntity.setClassification(schoolDetails.getClassification());
             schoolEntity.setName(schoolDetails.getName());
             schoolEntity.setAddress(schoolDetails.getAddress());
-            schoolEntity.setDivision(schoolDetails.getDivision());
             schoolEntity.setDistrict(schoolDetails.getDistrict());
 
             return schoolRepository.save(schoolEntity);

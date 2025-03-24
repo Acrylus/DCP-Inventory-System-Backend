@@ -16,10 +16,15 @@ import java.util.List;
 @Repository
 public interface SchoolContactRepository extends JpaRepository<SchoolContactEntity, Long> {
     Optional<SchoolContactEntity> findBySchool(SchoolEntity school);
+
     SchoolContactEntity findBySchool_SchoolRecordId(Long schoolRecordId);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM SchoolContactEntity c WHERE c.school.schoolRecordId = :schoolId")
     void deleteBySchoolId(@Param("schoolId") Long schoolId);
+
+    @Query("SELECT sc FROM SchoolContactEntity sc JOIN FETCH sc.school")
+    List<SchoolContactEntity> getAllWithSchool();
 
 }

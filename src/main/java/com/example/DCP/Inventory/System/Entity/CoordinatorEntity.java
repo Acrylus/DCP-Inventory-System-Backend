@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,27 +9,27 @@ import lombok.Data;
 @Data
 public class CoordinatorEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "coordinator_id")
-    private Long coordinatorId;
+    @EmbeddedId
+    private CoordinatorIdEntity id;
 
     @ManyToOne
+    @MapsId("schoolContactId")
     @JoinColumn(name = "school_contact_id", nullable = false)
+    @JsonBackReference
     private SchoolContactEntity schoolContact;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "designation", nullable = false)
+    @Column(name = "designation")
     private String designation;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "number", nullable = false)
+    @Column(name = "number")
     private String number;
 
-    @Column(name = "remarks", nullable = false)
+    @Column(name = "remarks")
     private String remarks;
 }

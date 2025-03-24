@@ -19,10 +19,6 @@ public class SchoolEntity {
     private Long schoolRecordId;
 
     @ManyToOne
-    @JoinColumn(name = "division_id", nullable = false)
-    private DivisionEntity division;
-
-    @ManyToOne
     @JoinColumn(name = "district_id", nullable = false)
     private DistrictEntity district;
 
