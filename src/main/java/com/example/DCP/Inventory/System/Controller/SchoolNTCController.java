@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.SchoolNTCDTOEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolNTCEntity;
 import com.example.DCP.Inventory.System.Service.SchoolNTCService;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
@@ -45,7 +46,7 @@ public class SchoolNTCController {
     @GetMapping("/get_all")
     public ResponseEntity<Object> getAllSchoolNTCs() {
         try {
-            List<SchoolNTCEntity> schoolNTCs = schoolNTCService.getAllSchoolNTCs();
+            List<SchoolNTCDTOEntity> schoolNTCs = schoolNTCService.getAllSchoolNTCs();
             return Response.response(HttpStatus.OK, "School NTCs fetched successfully", schoolNTCs);
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch School NTCs");

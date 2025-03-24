@@ -16,9 +16,12 @@ import java.util.Optional;
 public interface SchoolNTCRepository extends JpaRepository<SchoolNTCEntity, Long> {
     Optional<SchoolNTCEntity> findBySchool(SchoolEntity school);
     SchoolNTCEntity findBySchool_SchoolRecordId(Long schoolRecordId);
+
     @Modifying
     @Transactional
     @Query("DELETE FROM SchoolNTCEntity n WHERE n.school.schoolRecordId = :schoolId")
     void deleteBySchoolId(@Param("schoolId") Long schoolId);
 
+    @Query("SELECT sc FROM SchoolNTCEntity sc JOIN FETCH sc.school")
+    List<SchoolNTCEntity> getAllWithSchool();
 }

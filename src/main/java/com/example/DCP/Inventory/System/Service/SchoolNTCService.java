@@ -1,8 +1,6 @@
 package com.example.DCP.Inventory.System.Service;
 
-import com.example.DCP.Inventory.System.Entity.ProviderEntity;
-import com.example.DCP.Inventory.System.Entity.ProviderIdEntity;
-import com.example.DCP.Inventory.System.Entity.SchoolNTCEntity;
+import com.example.DCP.Inventory.System.Entity.*;
 import com.example.DCP.Inventory.System.Repository.ProviderRepository;
 import com.example.DCP.Inventory.System.Repository.SchoolNTCRepository;
 import jakarta.transaction.Transactional;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SchoolNTCService {
@@ -33,8 +32,29 @@ public class SchoolNTCService {
         return schoolNTCRepository.saveAll(schoolNTCs);
     }
 
-    public List<SchoolNTCEntity> getAllSchoolNTCs() {
-        return schoolNTCRepository.findAll();
+    @Transactional
+    public List<SchoolNTCDTOEntity> getAllSchoolNTCs() {
+        List<SchoolNTCEntity> ntcs = schoolNTCRepository.getAllWithSchool();
+
+        return ntcs.stream().map(ntc -> {
+            SchoolEntity school = ntc.getSchool();
+            SchoolDTOEntity schoolDTO = (school != null)
+                    ? new SchoolDTOEntity(school.getSchoolRecordId(), school.getSchoolId(), school.getName())
+                    : null;
+
+            return new SchoolNTCDTOEntity(
+                    ntc.getSchoolNTCId(),
+                    ntc.getInternet(),
+                    ntc.getPldt(),
+                    ntc.getGlobe(),
+                    ntc.getAm(),
+                    ntc.getFm(),
+                    ntc.getTv(),
+                    ntc.getCable(),
+                    ntc.getRemark(),
+                    schoolDTO
+            );
+        }).collect(Collectors.toList());
     }
 
     public Optional<SchoolNTCEntity> getSchoolNTCById(Long id) {
