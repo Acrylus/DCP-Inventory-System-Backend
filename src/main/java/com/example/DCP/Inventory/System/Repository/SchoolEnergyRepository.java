@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Repository;
 
+import com.example.DCP.Inventory.System.Entity.SchoolContactEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolEnergyEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolEntity;
 import jakarta.transaction.Transactional;
@@ -20,5 +21,8 @@ public interface SchoolEnergyRepository extends JpaRepository<SchoolEnergyEntity
     @Transactional
     @Query("DELETE FROM SchoolEnergyEntity e WHERE e.school.schoolRecordId = :schoolId")
     void deleteBySchoolId(@Param("schoolId") Long schoolId);
+
+    @Query("SELECT sc FROM SchoolEnergyEntity sc JOIN FETCH sc.school")
+    List<SchoolEnergyEntity> getAllWithSchool();
 
 }

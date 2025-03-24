@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Controller;
 
+import com.example.DCP.Inventory.System.Entity.SchoolEnergyDTOEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolEnergyEntity;
 import com.example.DCP.Inventory.System.Service.SchoolEnergyService;
 import com.example.DCP.Inventory.System.Response.NoDataResponse;
@@ -23,7 +24,7 @@ public class SchoolEnergyController {
     @GetMapping("/get_all")
     public ResponseEntity<Object> getAllSchoolEnergy() {
         try {
-            List<SchoolEnergyEntity> schoolEnergies = schoolEnergyService.getAllSchoolEnergy();
+            List<SchoolEnergyDTOEntity> schoolEnergies = schoolEnergyService.getAllSchoolEnergy();
             return Response.response(HttpStatus.OK, "School energies fetched successfully", schoolEnergies);
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to fetch school energies");
