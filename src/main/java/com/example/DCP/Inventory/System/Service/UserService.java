@@ -65,10 +65,7 @@ public class UserService {
     public UserEntity updateUser(Long id, UserEntity userDetails) {
         UserEntity userEntity = getUserById(id);
         userEntity.setUsername(userDetails.getUsername());
-        userEntity.setPassword(userDetails.getPassword());
         userEntity.setEmail(userDetails.getEmail());
-        userEntity.setUserType(userDetails.getUserType());
-        userEntity.setReferenceId(userDetails.getReferenceId());
         return userRepository.save(userEntity);
     }
 
