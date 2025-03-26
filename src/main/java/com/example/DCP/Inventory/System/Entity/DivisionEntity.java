@@ -7,14 +7,13 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Table(name = "division", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "officeName") // Ensure uniqueness at the database level
-})
+@Table(name = "division")
 @Entity
 public class DivisionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "division_id")
     private Long divisionId;
 
     @Column(name = "division",nullable = false, unique = true)

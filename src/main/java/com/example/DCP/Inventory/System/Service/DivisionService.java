@@ -27,8 +27,9 @@ public class DivisionService {
         return divisionRepository.findAll();
     }
 
-    public Optional<DivisionEntity> getDivisionById(Long id) {
-        return divisionRepository.findById(id);
+    public DivisionEntity getDivisionById(Long id) {
+        return divisionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Division not found"));
     }
 
     public DivisionEntity createDivision(DivisionEntity division) {
@@ -56,21 +57,16 @@ public class DivisionService {
     }
 
     public DivisionEntity updateDivision(Long id, DivisionEntity divisionDetails) {
-        return divisionRepository.findById(id)
-                .map(division -> {
-                    division.setDivision(divisionDetails.getDivision());
-                    division.setTitle(divisionDetails.getTitle());
-                    division.setSdsName(divisionDetails.getSdsName());
-                    division.setSdsPosition(divisionDetails.getSdsPosition());
-                    division.setItoName(divisionDetails.getItoName());
-                    division.setItoEmail(divisionDetails.getItoEmail());
+        DivisionEntity divisionEntity = getDivisionById(id);
 
-                    division.setMunicipalities(divisionDetails.getMunicipalities());
-                    division.setDistricts(divisionDetails.getDistricts());
+        divisionEntity.setDivision(divisionDetails.getDivision());
+        divisionEntity.setTitle(divisionDetails.getTitle());
+        divisionEntity.setSdsName(divisionDetails.getSdsName());
+        divisionEntity.setSdsPosition(divisionDetails.getSdsPosition());
+        divisionEntity.setItoName(divisionDetails.getItoName());
+        divisionEntity.setItoEmail(divisionDetails.getItoEmail());
 
-                    return divisionRepository.save(division);
-                })
-                .orElseThrow(() -> new RuntimeException("Division not found"));
+        return divisionRepository.save(divisionEntity);
     }
 
     public void deleteDivision(Long id) {

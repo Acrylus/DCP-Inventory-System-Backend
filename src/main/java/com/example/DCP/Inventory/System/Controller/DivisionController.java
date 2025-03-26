@@ -29,7 +29,7 @@ public class DivisionController {
     // Get division by ID
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getDivisionById(@PathVariable Long id) {
-        Optional<DivisionEntity> division = divisionService.getDivisionById(id);
+        DivisionEntity division = divisionService.getDivisionById(id);
         if (division != null) {
             return Response.response(HttpStatus.OK, "Division found", division);
         } else {
@@ -51,6 +51,7 @@ public class DivisionController {
             DivisionEntity updatedDivision = divisionService.updateDivision(id, divisionDetails);
             return Response.response(HttpStatus.OK, "Division updated successfully", updatedDivision);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Division not found");
         }
     }
