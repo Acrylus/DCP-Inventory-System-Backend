@@ -79,6 +79,7 @@ public class SchoolController {
             schoolService.deleteSchool(id);
             return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "School deleted successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete school");
         }
     }

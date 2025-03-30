@@ -21,9 +21,13 @@ public class SchoolService {
     @Autowired
     private SchoolContactRepository schoolContactRepository;
     @Autowired
+    private CoordinatorRepository coordinatorRepository;
+    @Autowired
     private SchoolEnergyRepository schoolEnergyRepository;
     @Autowired
     private SchoolNTCRepository schoolNTCRepository;
+    @Autowired
+    private ProviderRepository providerRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -79,14 +83,27 @@ public class SchoolService {
 
     @Transactional
     public void deleteSchool(Long id) {
-        if (schoolRepository.existsById(id)) {
-            schoolNTCRepository.deleteBySchoolId(id);
-            schoolEnergyRepository.deleteBySchoolId(id);
-            schoolContactRepository.deleteBySchoolId(id);
-            schoolRepository.deleteById(id);
-        } else {
-            throw new EntityNotFoundException("School with ID " + id + " not found.");
+        SchoolEntity school = schoolRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("School with ID " + id + " not found."));
+
+        // Ensure related entities are managed
+        SchoolNTCEntity schoolNTC = schoolNTCRepository.findBySchool_SchoolRecordId(id);
+        SchoolContactEntity schoolContact = schoolContactRepository.findBySchool_SchoolRecordId(id);
+
+        if (schoolNTC != null) {
+            schoolNTC = schoolNTCRepository.findById(schoolNTC.getSchoolNTCId()).orElse(null); // Ensure managed state
+            providerRepository.deleteBySchoolNTC(schoolNTC);
+            schoolNTCRepository.delete(schoolNTC);
         }
+
+        if (schoolContact != null) {
+            schoolContact = schoolContactRepository.findById(schoolContact.getSchoolContactId()).orElse(null); // Ensure managed state
+            coordinatorRepository.deleteBySchoolContact(schoolContact);
+            schoolContactRepository.delete(schoolContact);
+        }
+
+        schoolEnergyRepository.deleteBySchoolId(id);
+        schoolRepository.delete(school);
     }
 
 

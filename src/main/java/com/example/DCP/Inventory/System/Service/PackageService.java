@@ -95,4 +95,31 @@ public class PackageService {
 
         return packageRepository.save(existingPackage);
     }
+
+    public List<PackageEntity> updatePackagesBySchoolBatchId(Long schoolBatchId, List<PackageEntity> updatedPackages) {
+        List<PackageEntity> existingPackages = packageRepository.findBySchoolBatchList_SchoolBatchId(schoolBatchId);
+
+        if (existingPackages.isEmpty()) {
+            throw new ResourceNotFoundException("No packages found for the given School Batch ID");
+        }
+
+        if (existingPackages.size() != updatedPackages.size()) {
+            throw new IllegalArgumentException("Mismatch between existing and updated package count.");
+        }
+
+        for (int i = 0; i < existingPackages.size(); i++) {
+            PackageEntity existingPackage = existingPackages.get(i);
+            PackageEntity updatedPackage = updatedPackages.get(i); // Match updated package by index
+
+            existingPackage.setStatus(updatedPackage.getStatus());
+            existingPackage.setComponent(updatedPackage.getComponent());
+            existingPackage.setSerialNumber(updatedPackage.getSerialNumber());
+            existingPackage.setAssigned(updatedPackage.getAssigned());
+            existingPackage.setRemarks(updatedPackage.getRemarks());
+        }
+
+        return packageRepository.saveAll(existingPackages);
+    }
+
+
 }

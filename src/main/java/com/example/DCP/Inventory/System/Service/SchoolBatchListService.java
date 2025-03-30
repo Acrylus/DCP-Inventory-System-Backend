@@ -38,8 +38,13 @@ public class SchoolBatchListService {
         SchoolBatchListEntity existingBatchList = schoolBatchListRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("School Batch List not found with id: " + id));
 
-        // **Step 2: Delete all existing packages related to this batch list**
-        packageRepository.deleteBySchoolBatchList(existingBatchList);
+        boolean schoolChanged = !existingBatchList.getSchool().equals(updatedBatchList.getSchool());
+        boolean batchChanged = !existingBatchList.getBatch().equals(updatedBatchList.getBatch());
+
+        if (schoolChanged || batchChanged) {
+            packageRepository.deleteBySchoolBatchList(existingBatchList);
+        }
+
 
         // **Step 3: Update School Batch List Fields**
         existingBatchList.setBatch(updatedBatchList.getBatch());
@@ -54,35 +59,38 @@ public class SchoolBatchListService {
         // **Step 4: Save Updated School Batch List**
         SchoolBatchListEntity savedBatchList = schoolBatchListRepository.save(existingBatchList);
 
-        Long batchId = savedBatchList.getBatch().getBatchId();
-        BatchEntity batch = batchRepository.findById(batchId)
-                .orElseThrow(() -> new RuntimeException("Batch not found with ID: " + batchId));
+        if (schoolChanged || batchChanged) {
+            Long batchId = savedBatchList.getBatch().getBatchId();
+            BatchEntity batch = batchRepository.findById(batchId)
+                    .orElseThrow(() -> new RuntimeException("Batch not found with ID: " + batchId));
 
-        List<ConfigurationEntity> configurations = batch.getConfigurations();
-        List<PackageEntity> newPackages = new ArrayList<>();
 
-        // Get the max packageId for this schoolBatchListId
-        Long maxPackageId = packageRepository.findMaxPackageIdBySchoolBatchList(savedBatchList.getSchoolBatchId());
-        long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
+            List<ConfigurationEntity> configurations = batch.getConfigurations();
+            List<PackageEntity> newPackages = new ArrayList<>();
 
-        for (ConfigurationEntity config : configurations) {
-            for (int i = 0; i < savedBatchList.getNumberOfPackage(); i++) {
-                PackageIdEntity packageIdEntity = new PackageIdEntity();
-                packageIdEntity.setPackageId(packageId++);
-                packageIdEntity.setSchoolBatchListId(savedBatchList.getSchoolBatchId());
+            // Get the max packageId for this schoolBatchListId
+            Long maxPackageId = packageRepository.findMaxPackageIdBySchoolBatchList(savedBatchList.getSchoolBatchId());
+            long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
 
-                PackageEntity packageEntity = new PackageEntity();
-                packageEntity.setId(packageIdEntity);
-                packageEntity.setSchoolBatchList(savedBatchList);
-                packageEntity.setConfiguration(config);
-                packageEntity.setStatus("Pending");
+            for (ConfigurationEntity config : configurations) {
+                for (int i = 0; i < savedBatchList.getNumberOfPackage(); i++) {
+                    PackageIdEntity packageIdEntity = new PackageIdEntity();
+                    packageIdEntity.setPackageId(packageId++);
+                    packageIdEntity.setSchoolBatchListId(savedBatchList.getSchoolBatchId());
 
-                newPackages.add(packageEntity);
+                    PackageEntity packageEntity = new PackageEntity();
+                    packageEntity.setId(packageIdEntity);
+                    packageEntity.setSchoolBatchList(savedBatchList);
+                    packageEntity.setConfiguration(config);
+                    packageEntity.setStatus("Pending");
+
+                    newPackages.add(packageEntity);
+                }
             }
-        }
 
-        // **Step 6: Save all new packages**
-        packageRepository.saveAll(newPackages);
+            // **Step 6: Save all new packages**
+            packageRepository.saveAll(newPackages);
+        }
 
         return savedBatchList;
     }

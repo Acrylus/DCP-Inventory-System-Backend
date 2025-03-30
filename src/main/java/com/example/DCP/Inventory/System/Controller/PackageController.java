@@ -1,6 +1,7 @@
 package com.example.DCP.Inventory.System.Controller;
 
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
+import com.example.DCP.Inventory.System.Response.NoDataResponse;
 import com.example.DCP.Inventory.System.Response.Response;
 import com.example.DCP.Inventory.System.Service.PackageService;
 import org.springframework.http.HttpStatus;
@@ -90,4 +91,25 @@ public class PackageController {
         PackageEntity updatedPackage = packageService.patchPackage(schoolBatchId, packageId, updates);
         return ResponseEntity.ok(updatedPackage);
     }
+
+    @PutMapping("/update/school_batch/{schoolBatchId}")
+    public ResponseEntity<Object> updatePackagesBySchoolBatchId(
+            @PathVariable Long schoolBatchId,
+            @RequestBody List<PackageEntity> updatedPackages) {
+
+        try {
+            List<PackageEntity> result = packageService.updatePackagesBySchoolBatchId(schoolBatchId, updatedPackages);
+
+            if (result.isEmpty()) {
+                return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "No packages found for the given school batch ID");
+            }
+
+            return Response.response(HttpStatus.OK, "Packages updated successfully", result);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating packages");
+        }
+    }
+
+
 }
