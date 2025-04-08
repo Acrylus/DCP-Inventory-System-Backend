@@ -52,6 +52,7 @@ public class BatchController {
             BatchEntity updatedBatch = batchService.updateBatch(id, batchDetails);
             return Response.response(HttpStatus.OK, "Batch updated successfully", updatedBatch);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Batch not found");
         }
     }

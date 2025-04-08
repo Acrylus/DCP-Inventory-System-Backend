@@ -1,7 +1,9 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Exception.ResourceNotFoundException;
+import com.example.DCP.Inventory.System.Repository.ConfigurationRepository;
 import com.example.DCP.Inventory.System.Repository.PackageRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,11 @@ import java.util.Map;
 public class PackageService {
 
     private final PackageRepository packageRepository;
+    private final ConfigurationRepository configurationRepository;
 
-    public PackageService(PackageRepository packageRepository) {
+    public PackageService(PackageRepository packageRepository, ConfigurationRepository configurationRepository) {
         this.packageRepository = packageRepository;
+        this.configurationRepository = configurationRepository;
     }
 
     public List<PackageEntity> getAllPackages() {
@@ -43,10 +47,6 @@ public class PackageService {
 
     public List<PackageEntity> getPackageBySchoolBatchId(Long schoolBatchId) {
         return packageRepository.findBySchoolBatchList_SchoolBatchId(schoolBatchId);
-    }
-
-    public List<PackageEntity> getPackageByConfigurationId(Long configurationId) {
-        return packageRepository.findByConfiguration_ConfigurationId(configurationId);
     }
 
     public PackageEntity getUniquePackage(Long schoolBatchListId, Long packageId) {

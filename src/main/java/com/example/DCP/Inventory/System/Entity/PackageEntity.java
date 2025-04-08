@@ -17,8 +17,12 @@ public class PackageEntity {
     private SchoolBatchListEntity schoolBatchList;
 
     @ManyToOne
-    @JoinColumn(name = "configuration_id", nullable = false)
+    @JoinColumns({
+            @JoinColumn(name = "configuration_id", referencedColumnName = "configurationId"),
+            @JoinColumn(name = "batch_id", referencedColumnName = "batch_id")
+    })
     private ConfigurationEntity configuration;
+
 
     @Column(name = "status")
     private String status;

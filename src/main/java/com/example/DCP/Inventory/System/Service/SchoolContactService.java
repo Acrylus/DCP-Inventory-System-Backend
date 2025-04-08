@@ -88,30 +88,32 @@ public class SchoolContactService {
         // **Step 3: Save Updated Contact**
         SchoolContactEntity savedContact = schoolContactRepository.save(existingContact);
 
-        // **Step 4: Get the next available coordinatorId**
-        Long maxCoordinatorId = coordinatorRepository.findMaxCoordinatorId(savedContact.getSchoolContactId());
-        Long nextCoordinatorId = (maxCoordinatorId == null) ? 1 : maxCoordinatorId + 1;
+        List<CoordinatorEntity> coordinators = updatedContact.getCoordinators();
+        if (coordinators != null && !coordinators.isEmpty()) {
+            // Step 5: Get the next available coordinatorId
+            Long maxCoordinatorId = coordinatorRepository.findMaxCoordinatorId(savedContact.getSchoolContactId());
+            Long nextCoordinatorId = (maxCoordinatorId == null) ? 1 : maxCoordinatorId + 1;
 
-        // **Step 5: Add New Coordinators**
-        List<CoordinatorEntity> newCoordinators = new ArrayList<>();
-        for (CoordinatorEntity coordinator : updatedContact.getCoordinators()) {
-            CoordinatorIdEntity coordinatorIdEntity = new CoordinatorIdEntity();
-            coordinatorIdEntity.setCoordinatorId(nextCoordinatorId++);
-            coordinatorIdEntity.setSchoolContactId(savedContact.getSchoolContactId());
+            List<CoordinatorEntity> newCoordinators = new ArrayList<>();
+            for (CoordinatorEntity coordinator : coordinators) {
+                CoordinatorIdEntity coordinatorIdEntity = new CoordinatorIdEntity();
+                coordinatorIdEntity.setCoordinatorId(nextCoordinatorId++);
+                coordinatorIdEntity.setSchoolContactId(savedContact.getSchoolContactId());
 
-            CoordinatorEntity newCoordinator = new CoordinatorEntity();
-            newCoordinator.setId(coordinatorIdEntity);
-            newCoordinator.setSchoolContact(savedContact);
-            newCoordinator.setName(coordinator.getName());
-            newCoordinator.setDesignation(coordinator.getDesignation());
-            newCoordinator.setEmail(coordinator.getEmail());
-            newCoordinator.setRemarks(coordinator.getRemarks());
+                CoordinatorEntity newCoordinator = new CoordinatorEntity();
+                newCoordinator.setId(coordinatorIdEntity);
+                newCoordinator.setSchoolContact(savedContact);
+                newCoordinator.setName(coordinator.getName());
+                newCoordinator.setDesignation(coordinator.getDesignation());
+                newCoordinator.setEmail(coordinator.getEmail());
+                newCoordinator.setRemarks(coordinator.getRemarks());
 
-            newCoordinators.add(newCoordinator);
+                newCoordinators.add(newCoordinator);
+            }
+
+            // Step 6: Save All New Coordinators
+            coordinatorRepository.saveAll(newCoordinators);
         }
-
-        // **Step 6: Save All New Coordinators**
-        coordinatorRepository.saveAll(newCoordinators);
 
         return savedContact;
     }

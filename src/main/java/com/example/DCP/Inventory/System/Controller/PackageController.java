@@ -65,12 +65,6 @@ public class PackageController {
         return ResponseEntity.ok(packageSchoolBatchList);
     }
 
-    @GetMapping("/configuration/{configurationId}")
-    public ResponseEntity<List<PackageEntity>> getPackageByConfiguration(@PathVariable Long configurationId) {
-        List<PackageEntity> packageConfiguration = packageService.getPackageByConfigurationId(configurationId);
-        return ResponseEntity.ok(packageConfiguration);
-    }
-
     @GetMapping("/get/{packageId}/school_batch/{schoolBatchId}")
     public PackageEntity getUniquePackage(@PathVariable Long packageId, @PathVariable Long schoolBatchId) {
         return packageService.getUniquePackage(schoolBatchId, packageId);

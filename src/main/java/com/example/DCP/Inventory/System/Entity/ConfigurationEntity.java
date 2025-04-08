@@ -10,12 +10,11 @@ import lombok.Data;
 @Data
 public class ConfigurationEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "configuration_id")
-    private Long configurationId;
+    @EmbeddedId
+    private ConfigurationIdEntity id;
 
     @ManyToOne
+    @MapsId("batchId")
     @JoinColumn(name = "batch_id", nullable = false)
     @JsonBackReference
     private BatchEntity batch;

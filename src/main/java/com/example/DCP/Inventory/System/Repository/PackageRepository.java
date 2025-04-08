@@ -1,5 +1,6 @@
 package com.example.DCP.Inventory.System.Repository;
 
+import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
 import com.example.DCP.Inventory.System.Entity.PackageEntity;
 import com.example.DCP.Inventory.System.Entity.SchoolBatchListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface PackageRepository extends JpaRepository<PackageEntity, Long> {
     List<PackageEntity> findBySchoolBatchList_SchoolBatchId(Long schoolBatchId);
-    List<PackageEntity> findByConfiguration_ConfigurationId(Long configurationId);
     Optional<PackageEntity> findById_SchoolBatchListIdAndId_PackageId(Long schoolBatchListId, Long packageId);
     void deleteBySchoolBatchList(SchoolBatchListEntity schoolBatchId);
     @Query("SELECT MAX(p.id.packageId) FROM PackageEntity p WHERE p.schoolBatchList.schoolBatchId = :schoolBatchId")

@@ -74,7 +74,7 @@ public class SchoolService {
         user.setReferenceId(school.getSchoolRecordId());
         user.setUserType("school");
         user.setUsername(modifiedSchoolName);
-        user.setEmail(school.getSchoolId() + "@deped.gov.ph");
+        user.setEmail(school.getEmail());
         user.setPassword(passwordEncoder.encode("@Password123"));
         userRepository.save(user);
 
@@ -154,7 +154,7 @@ public class SchoolService {
             user.setReferenceId(school.getSchoolRecordId());
             user.setUserType("school");
             user.setUsername(modifiedSchoolName);
-            user.setEmail(school.getSchoolId() + "@deped.gov.ph");
+            user.setEmail(school.getEmail());
             user.setPassword(passwordEncoder.encode("@Password123"));
             userRepository.save(user);
         }
