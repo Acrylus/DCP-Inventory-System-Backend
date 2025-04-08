@@ -18,14 +18,14 @@ public class UserEntity {
     @Column(name = "reference_id", nullable = false)
     private Long referenceId;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
     @Convert(converter = FieldConverter.class)
     private String password;
 
-    @Column(name = "email", nullable = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "user_type", nullable = false)
