@@ -62,6 +62,22 @@ public class SchoolService {
         schoolNTC.setSchool(school);
         schoolNTCRepository.save(schoolNTC);
 
+        String originalSchoolName = school.getName();
+        String modifiedSchoolName = originalSchoolName;
+        String suffix = school.getDistrict().getName();
+
+        if (schoolRepository.existsByName(modifiedSchoolName)) {
+            modifiedSchoolName = originalSchoolName + " " + suffix;
+        }
+
+        UserEntity user = new UserEntity();
+        user.setReferenceId(school.getSchoolRecordId());
+        user.setUserType("school");
+        user.setUsername(modifiedSchoolName);
+        user.setEmail(school.getSchoolId() + "@deped.gov.ph");
+        user.setPassword(passwordEncoder.encode("@Password123"));
+        userRepository.save(user);
+
         return savedSchool;
     }
 
@@ -72,6 +88,7 @@ public class SchoolService {
             SchoolEntity schoolEntity = existingSchool.get();
             schoolEntity.setClassification(schoolDetails.getClassification());
             schoolEntity.setName(schoolDetails.getName());
+            schoolEntity.setEmail(schoolDetails.getEmail());
             schoolEntity.setAddress(schoolDetails.getAddress());
             schoolEntity.setDistrict(schoolDetails.getDistrict());
 
@@ -137,6 +154,7 @@ public class SchoolService {
             user.setReferenceId(school.getSchoolRecordId());
             user.setUserType("school");
             user.setUsername(modifiedSchoolName);
+            user.setEmail(school.getSchoolId() + "@deped.gov.ph");
             user.setPassword(passwordEncoder.encode("@Password123"));
             userRepository.save(user);
         }
