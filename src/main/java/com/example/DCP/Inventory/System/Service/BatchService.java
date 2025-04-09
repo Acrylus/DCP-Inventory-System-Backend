@@ -144,8 +144,43 @@ public class BatchService {
     }
 
     public BatchEntity saveBatch(BatchEntity batch) {
-        return batchRepository.save(batch);
+        // Step 1: Save the Batch First without configurations
+        List<ConfigurationEntity> newConfigurations = batch.getConfigurations();
+        batch.setConfigurations(new ArrayList<>()); // Temporarily remove configurations
+        BatchEntity savedBatch = batchRepository.save(batch);
+
+        // Step 2: If there are configurations, associate them with the saved batch
+
+        if (newConfigurations != null && !newConfigurations.isEmpty()) {
+            Long batchId = savedBatch.getBatchId();  // Get the saved batch ID
+
+            // Step 3: Assign Configuration IDs and associate them with the batch
+            Long maxConfigId = configurationRepository.findMaxConfigIdForBatch(batchId);
+            long nextConfigId = (maxConfigId != null) ? maxConfigId + 1 : 1;
+
+            for (ConfigurationEntity config : newConfigurations) {
+                // Create a ConfigurationIdEntity and assign the batchId and new configId
+                ConfigurationIdEntity configId = new ConfigurationIdEntity();
+                configId.setBatchId(batchId);
+                configId.setConfigurationId(nextConfigId++);
+
+                // Set the generated ID to the configuration entity
+                config.setId(configId);
+                config.setBatch(savedBatch);  // Associate the configuration with the batch
+            }
+
+            // Step 4: Save configurations separately
+            configurationRepository.saveAll(newConfigurations);
+
+            // Step 5: Add configurations back to the batch's list (optional)
+            savedBatch.getConfigurations().addAll(newConfigurations);
+            batchRepository.save(savedBatch);  // Save the batch again with the updated configurations
+        }
+
+        return savedBatch;  // Return the saved batch
     }
+
+
 
     public void deleteBatch(Long id) {
         batchRepository.deleteById(id);
