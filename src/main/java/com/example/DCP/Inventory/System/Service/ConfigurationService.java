@@ -1,6 +1,8 @@
 package com.example.DCP.Inventory.System.Service;
 
+import com.example.DCP.Inventory.System.Entity.BatchEntity;
 import com.example.DCP.Inventory.System.Entity.ConfigurationEntity;
+import com.example.DCP.Inventory.System.Entity.ConfigurationIdEntity;
 import com.example.DCP.Inventory.System.Exception.ResourceNotFoundException;
 import com.example.DCP.Inventory.System.Repository.ConfigurationRepository;
 import jakarta.transaction.Transactional;
@@ -61,22 +63,43 @@ public class ConfigurationService {
         configurationRepository.delete(config);
     }
 
-
     @Transactional
     public void saveAll(List<ConfigurationEntity> configurations) {
-        // Iterate over each configuration to assign the next configurationId based on the batchId
-        for (ConfigurationEntity configuration : configurations) {
-            Long batchId = configuration.getId().getBatchId();
-
-            // Find the maximum configurationId for this batchId
-            Long maxConfigId = configurationRepository.findMaxConfigIdForBatch(batchId);
-
-            // Set configurationId to the next available number
-            Long nextConfigId = (maxConfigId == null) ? 1 : maxConfigId + 1;
-            configuration.getId().setConfigurationId(nextConfigId);
+        if (configurations == null || configurations.isEmpty()) {
+            return; // No configurations to save
         }
 
-        // Save all configurations
+        // Step 1: Initialize a variable to track the current batchId
+        Long currentBatchId = null;
+        long nextConfigId = 1;
+
+        // Step 2: Iterate through configurations
+        for (ConfigurationEntity configuration : configurations) {
+            // If this is a new batch, reset the nextConfigId counter
+            if (configuration.getId() != null && !configuration.getId().getBatchId().equals(currentBatchId)) {
+                currentBatchId = configuration.getId().getBatchId();
+                nextConfigId = 1; // Restart counter for each batch
+            }
+
+            // If the configuration ID is null, assign a new one based on the batchId
+            if (configuration.getId() == null) {
+                ConfigurationIdEntity newId = new ConfigurationIdEntity();
+                newId.setBatchId(currentBatchId);
+                configuration.setId(newId);
+            }
+
+            // Assign the next available configurationId for the current configuration
+            configuration.getId().setConfigurationId(nextConfigId++);
+
+            // Ensure the batch is set on the configuration, if it's not already
+            if (configuration.getBatch() == null) {
+                BatchEntity batchEntity = new BatchEntity();
+                batchEntity.setBatchId(currentBatchId);
+                configuration.setBatch(batchEntity);
+            }
+        }
+
+        // Step 3: Save all configurations in one go
         configurationRepository.saveAll(configurations);
     }
 
