@@ -187,6 +187,37 @@ public class BatchService {
     }
 
     public void saveAll(List<BatchEntity> batches) {
-        batchRepository.saveAll(batches);
+        List<BatchEntity> savedBatches = new ArrayList<>();
+        List<ConfigurationEntity> allConfigurations = new ArrayList<>();
+
+        for (BatchEntity batch : batches) {
+            List<ConfigurationEntity> newConfigurations = batch.getConfigurations();
+            batch.setConfigurations(new ArrayList<>());
+            BatchEntity savedBatch = batchRepository.save(batch);
+            savedBatches.add(savedBatch);
+
+            if (newConfigurations != null && !newConfigurations.isEmpty()) {
+                Long batchId = savedBatch.getBatchId();
+                Long maxConfigId = configurationRepository.findMaxConfigIdForBatch(batchId);
+                long nextConfigId = (maxConfigId != null) ? maxConfigId + 1 : 1;
+
+                for (ConfigurationEntity config : newConfigurations) {
+                    ConfigurationIdEntity configId = new ConfigurationIdEntity();
+                    configId.setBatchId(batchId);
+                    configId.setConfigurationId(nextConfigId++);
+                    config.setId(configId);
+                    config.setBatch(savedBatch);
+                }
+
+                allConfigurations.addAll(newConfigurations);
+                savedBatch.getConfigurations().addAll(newConfigurations);
+            }
+        }
+
+        if (!allConfigurations.isEmpty()) {
+            configurationRepository.saveAll(allConfigurations);
+        }
+
+        batchRepository.saveAll(savedBatches);  // Final save to include configurations
     }
 }
