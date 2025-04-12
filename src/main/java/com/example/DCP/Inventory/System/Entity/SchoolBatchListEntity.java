@@ -30,7 +30,7 @@ public class SchoolBatchListEntity {
     private SchoolEntity school;
 
     @Column(name = "delivery_date")
-    private LocalDate deliveryDate;
+    private String deliveryDate;
 
     @Column(name = "number_of_package")
     private Integer numberOfPackage;
