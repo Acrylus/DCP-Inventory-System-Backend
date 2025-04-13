@@ -77,14 +77,14 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        UserEntity user = userRepository.findByUsername(loginRequest.getUsername())
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new IncorrectPasswordException("Password is incorrect");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getUserId(), user.getUserType());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getUserId(), user.getUserType());
 
         return new LoginResponse(user, token);
     }

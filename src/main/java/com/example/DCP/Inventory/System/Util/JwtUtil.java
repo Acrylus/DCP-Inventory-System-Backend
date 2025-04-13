@@ -23,9 +23,9 @@ public class JwtUtil {
         this.expirationTime = expiration;
     }
 
-    public String generateToken(String username, Long userId, String userType) {
+    public String generateToken(String email, Long userId, String userType) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .claim("userId", userId)
                 .claim("userType", userType)
                 .setIssuedAt(new Date())
