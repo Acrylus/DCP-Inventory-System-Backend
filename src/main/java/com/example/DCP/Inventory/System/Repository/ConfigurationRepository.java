@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ConfigurationRepository extends JpaRepository<ConfigurationEntity, Long> {
     List<ConfigurationEntity> findByBatch_BatchId(Long batchId);
+
     Optional<ConfigurationEntity> findById_BatchIdAndId_ConfigurationId(Long batchId, Long configurationId);
 
     @Query("SELECT MAX(c.id.configurationId) FROM ConfigurationEntity c WHERE c.id.batchId = :batchId")
@@ -21,4 +22,6 @@ public interface ConfigurationRepository extends JpaRepository<ConfigurationEnti
     @Modifying
     @Query("DELETE FROM ConfigurationEntity c WHERE c.id.batchId = :batchId")
     void deleteByBatch(@Param("batchId") Long batchId);
+
+    List<ConfigurationEntity> findById_BatchIdOrderById_ConfigurationId(Long batchId);
 }

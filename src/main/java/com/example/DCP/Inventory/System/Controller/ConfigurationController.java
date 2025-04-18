@@ -59,13 +59,14 @@ public class ConfigurationController {
 
     @DeleteMapping("/delete/{configurationId}/batch/{batchId}")
     public ResponseEntity<Object> deleteConfiguration(
-            @PathVariable Long batchId,
-            @PathVariable Long configurationId
+            @PathVariable Long configurationId,
+            @PathVariable Long batchId
     ) {
         try {
             configurationService.deleteConfiguration(batchId, configurationId);
             return NoDataResponse.noDataResponse(HttpStatus.NO_CONTENT, "Configuration deleted successfully");
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, "Configuration not found");
         }
     }

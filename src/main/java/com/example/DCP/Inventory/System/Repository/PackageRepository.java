@@ -18,4 +18,7 @@ public interface PackageRepository extends JpaRepository<PackageEntity, Long> {
     void deleteBySchoolBatchList(SchoolBatchListEntity schoolBatchId);
     @Query("SELECT MAX(p.id.packageId) FROM PackageEntity p WHERE p.schoolBatchList.schoolBatchId = :schoolBatchId")
     Long findMaxPackageIdBySchoolBatchList(@Param("schoolBatchId") Long schoolBatchId);
+    List<PackageEntity> findByConfiguration_Id_ConfigurationIdAndSchoolBatchList_Batch_BatchId(Long configurationId, Long batchId);
+    List<PackageEntity> findBySchoolBatchList_Batch_BatchId(Long batchId);
+
 }
