@@ -105,6 +105,7 @@ public class SchoolContactService {
                 newCoordinator.setSchoolContact(savedContact);
                 newCoordinator.setName(coordinator.getName());
                 newCoordinator.setDesignation(coordinator.getDesignation());
+                newCoordinator.setNumber(coordinator.getNumber());
                 newCoordinator.setEmail(coordinator.getEmail());
                 newCoordinator.setRemarks(coordinator.getRemarks());
 
