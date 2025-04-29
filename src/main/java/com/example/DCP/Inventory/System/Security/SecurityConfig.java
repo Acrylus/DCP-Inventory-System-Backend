@@ -53,7 +53,8 @@ public class SecurityConfig {
     private UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // Allow only frontend domain
+        //config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost", "http://122.3.195.244"));
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH")); // Allow necessary HTTP methods
         config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Allow specific headers
         config.setAllowCredentials(true); // Allow credentials (cookies, headers, etc.)

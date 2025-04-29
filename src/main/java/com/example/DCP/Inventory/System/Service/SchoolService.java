@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -48,6 +49,7 @@ public class SchoolService {
 
     @Transactional
     public SchoolEntity createSchool(SchoolEntity school) {
+        school.setEmail(school.getSchoolId() + "@deped.gov.ph");
         SchoolEntity savedSchool = schoolRepository.save(school);
 
         SchoolContactEntity schoolContact = new SchoolContactEntity();
@@ -81,21 +83,35 @@ public class SchoolService {
         return savedSchool;
     }
 
+    @Transactional
     public SchoolEntity updateSchool(Long id, SchoolEntity schoolDetails) {
-        Optional<SchoolEntity> existingSchool = schoolRepository.findById(id);
+        SchoolEntity schoolEntity = schoolRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("School not found with ID: " + id));
 
-        if (existingSchool.isPresent()) {
-            SchoolEntity schoolEntity = existingSchool.get();
-            schoolEntity.setClassification(schoolDetails.getClassification());
-            schoolEntity.setName(schoolDetails.getName());
-            schoolEntity.setEmail(schoolDetails.getEmail());
-            schoolEntity.setAddress(schoolDetails.getAddress());
-            schoolEntity.setDistrict(schoolDetails.getDistrict());
+        // Set updated school info
+        String generatedEmail = schoolDetails.getSchoolId() + "@deped.gov.ph";
 
-            return schoolRepository.save(schoolEntity);
-        } else {
-            throw new RuntimeException("School not found with ID: " + id);
+        schoolEntity.setClassification(schoolDetails.getClassification());
+        schoolEntity.setSchoolId(schoolDetails.getSchoolId());
+        schoolEntity.setName(schoolDetails.getName());
+        schoolEntity.setEmail(generatedEmail);
+        schoolEntity.setAddress(schoolDetails.getAddress());
+        schoolEntity.setDistrict(schoolDetails.getDistrict());
+
+        SchoolEntity updatedSchool = schoolRepository.save(schoolEntity);
+
+        Long userId = userRepository.findUserIdBySchoolRecordId(id);
+        if (userId == null) {
+            throw new EntityNotFoundException("User not found for school ID: " + id);
         }
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User entity not found with ID: " + userId));
+
+        user.setEmail(generatedEmail);
+        userRepository.save(user);
+
+        return updatedSchool;
     }
 
     @Transactional
@@ -119,9 +135,18 @@ public class SchoolService {
             schoolContactRepository.delete(schoolContact);
         }
 
+        // 🆕 Delete associated user
+        try {
+            Long userId = userRepository.findUserIdBySchoolRecordId(id);
+            userRepository.deleteById(userId);
+        } catch (Exception e) {
+            System.out.println("No user found or failed to delete user for schoolRecordId: " + id);
+        }
+
         schoolEnergyRepository.deleteBySchoolId(id);
         schoolRepository.delete(school);
     }
+
 
 
     @Transactional
@@ -129,6 +154,7 @@ public class SchoolService {
         List<SchoolEntity> savedSchools = schoolRepository.saveAll(schools);
 
         for (SchoolEntity school : savedSchools) {
+            school.setEmail(school.getSchoolId() + "@deped.gov.ph");
             SchoolContactEntity schoolContact = new SchoolContactEntity();
             schoolContact.setSchool(school);
             schoolContactRepository.save(schoolContact);

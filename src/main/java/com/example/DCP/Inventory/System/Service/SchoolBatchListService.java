@@ -34,46 +34,44 @@ public class SchoolBatchListService {
 
     @Transactional
     public SchoolBatchListEntity updateSchoolBatchList(Long id, SchoolBatchListEntity updatedBatchList) {
-        // **Step 1: Fetch Existing SchoolBatchList**
+        // Step 1: Fetch Existing SchoolBatchList
         SchoolBatchListEntity existingBatchList = schoolBatchListRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("School Batch List not found with id: " + id));
 
-        boolean schoolChanged = !existingBatchList.getSchool().equals(updatedBatchList.getSchool());
-        boolean batchChanged = !existingBatchList.getBatch().equals(updatedBatchList.getBatch());
+        // ✅ Store old number of packages BEFORE updating
+        int oldNumberOfPackages = existingBatchList.getNumberOfPackage();
+        int newNumberOfPackages = updatedBatchList.getNumberOfPackage();
 
-        if (schoolChanged || batchChanged) {
-            packageRepository.deleteBySchoolBatchList(existingBatchList);
-        }
-
-
-        // **Step 3: Update School Batch List Fields**
+        // Step 2: Update School Batch List Fields
         existingBatchList.setBatch(updatedBatchList.getBatch());
         existingBatchList.setSchool(updatedBatchList.getSchool());
         existingBatchList.setDeliveryDate(updatedBatchList.getDeliveryDate());
-        existingBatchList.setNumberOfPackage(updatedBatchList.getNumberOfPackage());
+        existingBatchList.setNumberOfPackage(newNumberOfPackages);
         existingBatchList.setStatus(updatedBatchList.getStatus());
         existingBatchList.setKeyStage(updatedBatchList.getKeyStage());
         existingBatchList.setRemarks(updatedBatchList.getRemarks());
         existingBatchList.setAccountable(updatedBatchList.getAccountable());
 
-        // **Step 4: Save Updated School Batch List**
+        // Step 3: Save Updated School Batch List
         SchoolBatchListEntity savedBatchList = schoolBatchListRepository.save(existingBatchList);
 
-        if (schoolChanged || batchChanged) {
+        // Step 4: If the number increased, generate new packages
+        if (newNumberOfPackages > oldNumberOfPackages) {
+            int packagesToAddMultiplier = newNumberOfPackages - oldNumberOfPackages;
+
             Long batchId = savedBatchList.getBatch().getBatchId();
             BatchEntity batch = batchRepository.findById(batchId)
                     .orElseThrow(() -> new RuntimeException("Batch not found with ID: " + batchId));
-
-
             List<ConfigurationEntity> configurations = batch.getConfigurations();
-            List<PackageEntity> newPackages = new ArrayList<>();
 
-            // Get the max packageId for this schoolBatchListId
+            List<PackageEntity> newPackages = new ArrayList<>();
             Long maxPackageId = packageRepository.findMaxPackageIdBySchoolBatchList(savedBatchList.getSchoolBatchId());
             long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
 
             for (ConfigurationEntity config : configurations) {
-                for (int i = 0; i < savedBatchList.getNumberOfPackage(); i++) {
+                int packagesForThisConfig = config.getQuantity() * packagesToAddMultiplier;
+
+                for (int i = 0; i < packagesForThisConfig; i++) {
                     PackageIdEntity packageIdEntity = new PackageIdEntity();
                     packageIdEntity.setPackageId(packageId++);
                     packageIdEntity.setSchoolBatchListId(savedBatchList.getSchoolBatchId());
@@ -88,7 +86,6 @@ public class SchoolBatchListService {
                 }
             }
 
-            // **Step 6: Save all new packages**
             packageRepository.saveAll(newPackages);
         }
 
@@ -112,7 +109,7 @@ public class SchoolBatchListService {
         long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
 
         for (ConfigurationEntity config : configurations) {
-            for (int i = 0; i < savedSchoolBatchList.getNumberOfPackage(); i++) {
+            for (int i = 0; i < savedSchoolBatchList.getNumberOfPackage() * config.getQuantity(); i++) {
                 PackageIdEntity packageIdEntity = new PackageIdEntity();
                 packageIdEntity.setPackageId(packageId++);
                 packageIdEntity.setSchoolBatchListId(savedSchoolBatchList.getSchoolBatchId());
@@ -153,7 +150,7 @@ public class SchoolBatchListService {
             long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
 
             for (ConfigurationEntity config : configurations) {
-                for (int i = 0; i < schoolBatchList.getNumberOfPackage(); i++) {
+                for (int i = 0; i < schoolBatchList.getNumberOfPackage() * config.getQuantity(); i++) {
                     PackageIdEntity packageIdEntity = new PackageIdEntity();
                     packageIdEntity.setPackageId(packageId++);
                     packageIdEntity.setSchoolBatchListId(schoolBatchList.getSchoolBatchId());

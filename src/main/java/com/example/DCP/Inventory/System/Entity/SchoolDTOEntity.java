@@ -8,5 +8,6 @@ import lombok.Data;
 public class SchoolDTOEntity {
     private Long schoolRecordId;
     private String schoolId;
+    private DistrictEntity district;
     private String name;
 }

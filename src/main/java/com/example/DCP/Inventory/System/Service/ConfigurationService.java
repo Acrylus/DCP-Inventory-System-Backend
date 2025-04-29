@@ -32,17 +32,70 @@ public class ConfigurationService {
                 .orElseThrow(() -> new RuntimeException("Configuration not found"));
     }
 
+    @Transactional
     public ConfigurationEntity updateConfiguration(Long batchId, Long configurationId, ConfigurationEntity configurationDetails) {
+        // Step 1: Fetch the existing configuration
         ConfigurationEntity configurationEntity = configurationRepository.findById_BatchIdAndId_ConfigurationId(batchId, configurationId)
                 .orElseThrow(() -> new RuntimeException("Configuration not found for batchId: " + batchId + " and configurationId: " + configurationId));
 
+        // 💡 Step 1.1: Save the original quantity before it's overwritten
+        int oldQuantity = configurationEntity.getQuantity();
+        int newQuantity = configurationDetails.getQuantity();
+
+        // Step 2: Update the configuration fields
         configurationEntity.setItem(configurationDetails.getItem());
         configurationEntity.setType(configurationDetails.getType());
-        configurationEntity.setQuantity(configurationDetails.getQuantity());
+        configurationEntity.setQuantity(newQuantity);
         configurationEntity.setBatch(configurationDetails.getBatch());
 
-        return configurationRepository.save(configurationEntity);
+        // Step 3: Save the updated configuration
+        ConfigurationEntity savedConfiguration = configurationRepository.save(configurationEntity);
+
+        // Step 4: Update related packages if configuration is null
+        List<PackageEntity> relatedPackages = packageRepository.findByConfiguration_Id_ConfigurationIdAndSchoolBatchList_Batch_BatchId(
+                configurationId, batchId);
+
+        for (PackageEntity packageEntity : relatedPackages) {
+            if (packageEntity.getConfiguration() == null) {
+                packageEntity.setConfiguration(savedConfiguration);
+            }
+        }
+
+        // Step 5: If quantity has changed, add/remove packages
+        if (oldQuantity != newQuantity) {
+            List<SchoolBatchListEntity> schoolBatchLists = schoolBatchListRepository.findByBatch_BatchId(batchId);
+
+            for (SchoolBatchListEntity schoolBatchList : schoolBatchLists) {
+                int numberOfPackagePerSchool = schoolBatchList.getNumberOfPackage();
+                Long maxPackageId = packageRepository.findMaxPackageIdBySchoolBatchList(schoolBatchList.getSchoolBatchId());
+                long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
+
+                int quantityDifference = newQuantity - oldQuantity;
+
+                if (quantityDifference > 0) {
+                    // Add new packages
+                    for (int i = 0; i < quantityDifference * numberOfPackagePerSchool; i++) {
+                        PackageEntity newPackage = new PackageEntity();
+                        newPackage.setSchoolBatchList(schoolBatchList);
+                        newPackage.setConfiguration(savedConfiguration);
+                        newPackage.setStatus("Pending");
+
+                        PackageIdEntity packageIdEntity = new PackageIdEntity();
+                        packageIdEntity.setPackageId(packageId++);
+                        packageIdEntity.setSchoolBatchListId(schoolBatchList.getSchoolBatchId());
+                        newPackage.setId(packageIdEntity);
+
+                        packageRepository.save(newPackage);
+                    }
+                } else {
+                    // Optionally: remove excess packages (not implemented yet)
+                }
+            }
+        }
+
+        return savedConfiguration;
     }
+
 
     @Transactional
     public ConfigurationEntity saveConfiguration(ConfigurationEntity configurationEntity) {
@@ -79,7 +132,7 @@ public class ConfigurationService {
             Long maxPackageId = packageRepository.findMaxPackageIdBySchoolBatchList(schoolBatchList.getSchoolBatchId());
             long packageId = (maxPackageId != null) ? maxPackageId + 1 : 1;
 
-            for (int i = 0; i < numberOfPackagesToAdd; i++) {
+            for (int i = 0; i < numberOfPackagesToAdd * configurationEntity.getQuantity(); i++) {
                 PackageEntity newPackage = new PackageEntity();
                 newPackage.setSchoolBatchList(schoolBatchList);
                 newPackage.setConfiguration(savedConfiguration);

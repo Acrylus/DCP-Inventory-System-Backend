@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -129,6 +130,23 @@ public class UserController {
             return NoDataResponse.noDataResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (Exception e) {
             return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to change password");
+        }
+    }
+
+    @PatchMapping("/reset_password/{schoolRecordId}")
+    public ResponseEntity<Object> resetPassword(@PathVariable Long schoolRecordId) {
+        try {
+            boolean success = userService.resetPassword(schoolRecordId);
+
+            return success
+                    ? NoDataResponse.noDataResponse(HttpStatus.OK, "Password reset successfully to @Password123")
+                    : NoDataResponse.noDataResponse(HttpStatus.BAD_REQUEST, "Failed to reset password");
+
+        } catch (NoSuchElementException e) {
+            return NoDataResponse.noDataResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return NoDataResponse.noDataResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to reset password");
         }
     }
 

@@ -157,4 +157,23 @@ public class UserService {
             throw new NoSuchElementException("User not found with ID: " + userId);
         }
     }
+
+    public boolean resetPassword(Long schoolRecordId) {
+        Long userId = userRepository.findUserIdBySchoolRecordId(schoolRecordId);
+
+        if(userId == null){
+            throw new NoSuchElementException("User not found");
+        }
+
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+
+        if(optionalUser.isPresent()){
+            UserEntity user = optionalUser.get();
+            user.setPassword(passwordEncoder.encode("@Password123"));
+            userRepository.save(user);
+            return true;
+        }
+
+        return false;
+    }
 }

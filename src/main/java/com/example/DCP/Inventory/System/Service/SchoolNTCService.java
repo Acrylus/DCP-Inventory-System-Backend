@@ -39,7 +39,7 @@ public class SchoolNTCService {
         return ntcs.stream().map(ntc -> {
             SchoolEntity school = ntc.getSchool();
             SchoolDTOEntity schoolDTO = (school != null)
-                    ? new SchoolDTOEntity(school.getSchoolRecordId(), school.getSchoolId(), school.getName())
+                    ? new SchoolDTOEntity(school.getSchoolRecordId(), school.getSchoolId(), school.getDistrict(), school.getName())
                     : null;
 
             return new SchoolNTCDTOEntity(

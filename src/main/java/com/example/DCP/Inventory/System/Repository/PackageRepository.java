@@ -20,5 +20,5 @@ public interface PackageRepository extends JpaRepository<PackageEntity, Long> {
     Long findMaxPackageIdBySchoolBatchList(@Param("schoolBatchId") Long schoolBatchId);
     List<PackageEntity> findByConfiguration_Id_ConfigurationIdAndSchoolBatchList_Batch_BatchId(Long configurationId, Long batchId);
     List<PackageEntity> findBySchoolBatchList_Batch_BatchId(Long batchId);
-
+    int countBySchoolBatchList(SchoolBatchListEntity schoolBatchList);
 }
